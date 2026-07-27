@@ -15,17 +15,10 @@ namespace ExFillZone.Gameplay.Player
             }
         }
 
-        public Vector2 LookInput
-        {
-            get
-            {
-                float mouseX = Input.GetAxis("Mouse X");
-                float mouseY = Input.GetAxis("Mouse Y");
+        public Vector3 MouseScreenPosition => Input.mousePosition;
 
-                return new Vector2(mouseX, mouseY);
-            }
-        }
+        public bool FirePressed => Input.GetMouseButtonDown(0);
 
-        public bool FirePressed => Input.GetButtonDown("Fire1");
+        public bool AimHeld => Input.GetMouseButton(1);
     }
 }

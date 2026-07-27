@@ -4,30 +4,42 @@ using UnityEngine;
 namespace ExFillZone.Gameplay.Player
 {
     [RequireComponent(typeof(PlayerInputReader))]
+    [RequireComponent(typeof(PlayerAimController))]
     public sealed class PlayerShooter : MonoBehaviour
     {
         [Header("References")]
         [SerializeField]
-        private Camera aimCamera;
-
-        [SerializeField]
         private HitscanWeapon weapon;
 
+        [SerializeField]
+        private Transform muzzle;
+
         private PlayerInputReader inputReader;
+        private PlayerAimController aimController;
 
         private void Awake()
         {
-            inputReader = GetComponent<PlayerInputReader>();
+            inputReader =
+                GetComponent<PlayerInputReader>();
 
-            if (aimCamera == null)
+            aimController =
+                GetComponent<PlayerAimController>();
+
+            if (weapon == null)
             {
-                aimCamera = GetComponentInChildren<Camera>();
+                weapon =
+                    GetComponentInChildren<HitscanWeapon>();
             }
 
-            if (aimCamera == null || weapon == null)
+            if (muzzle == null && weapon != null)
+            {
+                muzzle = weapon.transform;
+            }
+
+            if (weapon == null || muzzle == null)
             {
                 Debug.LogError(
-                    "Tampoco Jalo bro ocupa el arma y su camara.",
+                    "PlayerShooter necesita un arma y un Muzzle.",
                     this
                 );
 
@@ -37,6 +49,11 @@ namespace ExFillZone.Gameplay.Player
 
         private void Update()
         {
+            if (!aimController.IsAiming)
+            {
+                return;
+            }
+
             if (inputReader.FirePressed)
             {
                 Shoot();
@@ -45,13 +62,16 @@ namespace ExFillZone.Gameplay.Player
 
         private void Shoot()
         {
-            Ray aimingRay = aimCamera.ViewportPointToRay(
-                new Vector3(0.5f, 0.5f, 0f)
-            );
+            Vector3 direction =
+                aimController.AimDirection;
+
+            Vector3 origin =
+                muzzle.position +
+                direction * 0.05f;
 
             weapon.Fire(
-                aimingRay.origin,
-                aimingRay.direction
+                origin,
+                direction
             );
         }
     }
