@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 85809993430618348}
   - component: {fileID: 3646020978846842853}
   - component: {fileID: 4657673758555394643}
+  - component: {fileID: 3889276375168470857}
   - component: {fileID: 6529574627535036326}
   - component: {fileID: 852591623545884787}
   m_Layer: 0
@@ -178,8 +179,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Player.PlayerMotor
   movementReference: {fileID: 0}
-  movementSpeed: 5
+  walkSpeed: 5
+  sprintSpeed: 8
+  walkAcceleration: 35
+  sprintAcceleration: 22
+  walkDeceleration: 50
+  sprintDeceleration: 18
+  directionChangeAcceleration: 45
+  canSprintWhileAiming: 0
   gravity: -20
+--- !u!114 &3889276375168470857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7362181706505820130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa3ef8a6491ed1a42a399a995bdc55e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Player.PlayerStamina
+  maximumStamina: 100
+  sprintDrainPerSecond: 20
+  recoveryPerSecond: 18
+  recoveryDelay: 1
+  restartExhaustion: 0.2
+  currentStamina: 0
 --- !u!114 &6529574627535036326
 MonoBehaviour:
   m_ObjectHideFlags: 0

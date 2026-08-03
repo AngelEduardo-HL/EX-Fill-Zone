@@ -15,10 +15,17 @@ namespace ExFillZone.Gameplay.Player
             }
         }
 
-        public Vector3 MouseScreenPosition => Input.mousePosition;
+        public Vector3 MouseScreenPosition =>
+            Input.mousePosition;
 
-        public bool FirePressed => Input.GetMouseButtonDown(0);
+        public bool FirePressed =>
+            Input.GetMouseButtonDown(0);
 
-        public bool AimHeld => Input.GetMouseButton(1);
+        public bool AimHeld =>
+            Input.GetMouseButton(1);
+
+        public bool SprintHeld =>
+            Input.GetKey(KeyCode.LeftShift) ||
+            Input.GetKey(KeyCode.RightShift);
     }
 }
