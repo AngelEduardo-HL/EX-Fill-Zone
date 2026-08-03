@@ -184,7 +184,7 @@ namespace ExFillZone.Gameplay.Player
                 );
         }
 
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmos()
         {
             if (!Application.isPlaying)
             {

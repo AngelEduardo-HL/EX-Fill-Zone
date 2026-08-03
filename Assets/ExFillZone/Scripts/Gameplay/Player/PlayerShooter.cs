@@ -1,3 +1,4 @@
+using ExFillZone.AI.Shared.Stimuli;
 using ExFillZone.Gameplay.Combat;
 using UnityEngine;
 
@@ -13,6 +14,9 @@ namespace ExFillZone.Gameplay.Player
 
         [SerializeField]
         private Transform muzzle;
+
+        [SerializeField]
+        private GunshotEmitter gunshotEmitter;
 
         private PlayerInputReader inputReader;
         private PlayerAimController aimController;
@@ -34,6 +38,12 @@ namespace ExFillZone.Gameplay.Player
             if (muzzle == null && weapon != null)
             {
                 muzzle = weapon.transform;
+            }
+
+            if (gunshotEmitter == null)
+            {
+                gunshotEmitter =
+                    GetComponentInChildren<GunshotEmitter>();
             }
 
             if (weapon == null || muzzle == null)
@@ -72,6 +82,10 @@ namespace ExFillZone.Gameplay.Player
             weapon.Fire(
                 origin,
                 direction
+            );
+
+            gunshotEmitter?.Emit(
+                muzzle.position
             );
         }
     }
