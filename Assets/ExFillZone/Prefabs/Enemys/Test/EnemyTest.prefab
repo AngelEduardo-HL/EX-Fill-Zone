@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 4985205699754458697}
   - component: {fileID: 7261687402796056262}
   - component: {fileID: 1637748338920678957}
+  - component: {fileID: 5044381897247771761}
   m_Layer: 0
   m_Name: EnemyTest
   m_TagString: Untagged
@@ -168,3 +169,16 @@ MonoBehaviour:
   idlePriority: 5
   gunshotPriority: 60
   investigationDuration: 2.5
+--- !u!114 &5044381897247771761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6011252803969196441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be052ccdbc0094647af427581d083bc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Combat.TargetHealth
+  maximumHealth: 50
