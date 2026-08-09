@@ -6168,6 +6168,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1416679013}
   - component: {fileID: 1416679012}
+  - component: {fileID: 1416679014}
   m_Layer: 0
   m_Name: Extract
   m_TagString: Untagged
@@ -6211,6 +6212,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 42.197, z: 0}
+--- !u!114 &1416679014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416679011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69210e4a9ee360747bbb4d05d643bccc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.GameFlow.VictoryTrigger
+  victoryScene: Menu
 --- !u!1 &1420694647
 GameObject:
   m_ObjectHideFlags: 0
@@ -9806,6 +9820,10 @@ PrefabInstance:
       objectReference: {fileID: 330585545}
     - target: {fileID: 7362181706505820130, guid: d5aff1d37ce4a6b4c98db5b690638583, type: 3}
       propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 7362181706505820130, guid: d5aff1d37ce4a6b4c98db5b690638583, type: 3}
+      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     m_RemovedComponents: []
