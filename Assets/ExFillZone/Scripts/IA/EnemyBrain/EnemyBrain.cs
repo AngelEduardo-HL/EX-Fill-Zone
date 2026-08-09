@@ -1,45 +1,58 @@
 using ExFillZone.AI.Director;
 using ExFillZone.AI.Enemy.Navigation;
+using ExFillZone.AI.Enemy.Perception;
 using ExFillZone.AI.Shared.Data;
 using ExFillZone.AI.Shared.Enums;
+
+using Panda;
 using UnityEngine;
 
 namespace ExFillZone.AI.Enemy
 {
     [RequireComponent(typeof(EnemyNavigator))]
+    [RequireComponent(typeof(EnemyFOV))]
     public sealed class EnemyBrain : MonoBehaviour
     {
         [Header("References")]
         [SerializeField]
         private AIDirector director;
 
-        [Header("Goal Priorities")]
-        [SerializeField, Min(0f)]
-        private float idlePriority = 5f;
-
+        [Header("Gunshot")]
         [SerializeField, Min(0f)]
         private float gunshotPriority = 60f;
 
-        [Header("Investigation")]
         [SerializeField, Min(0f)]
-        private float investigationDuration = 2.5f;
+        private float investigationTime = 2.5f;
 
         private EnemyNavigator navigator;
-        private GunshotClue currentClue;
+        private EnemyFOV fov;
 
-        private float currentPriority;
-        private float investigationTimeRemaining;
+        private GunshotClue clue;
+
         private bool hasClue;
+        private bool isCheckingArea;
 
-        public EnemyState CurrentState { get; private set; }
+        private float checkTimer;
 
-        public float GunshotPriority => gunshotPriority;
+        public EnemyState CurrentState
+        {
+            get;
+            private set;
+        }
 
-        public Vector3 Position => transform.position;
+        public float GunshotPriority =>
+            gunshotPriority;
+
+        public Vector3 Position =>
+            transform.position;
 
         private void Awake()
         {
-            navigator = GetComponent<EnemyNavigator>();
+            navigator =
+                GetComponent<EnemyNavigator>();
+
+            fov =
+                GetComponent<EnemyFOV>();
 
             if (director == null)
             {
@@ -47,8 +60,8 @@ namespace ExFillZone.AI.Enemy
                     FindFirstObjectByType<AIDirector>();
             }
 
-            currentPriority = idlePriority;
-            CurrentState = EnemyState.Idle;
+            CurrentState =
+                EnemyState.Idle;
         }
 
         private void OnEnable()
@@ -67,102 +80,171 @@ namespace ExFillZone.AI.Enemy
             }
         }
 
-        private void Update()
-        {
-            switch (CurrentState)
-            {
-                case EnemyState.MovingToInvestigation:
-                    UpdateMovementToInvestigation();
-                    break;
-
-                case EnemyState.Investigating:
-                    UpdateInvestigation();
-                    break;
-            }
-        }
+        // =====================================
+        // RECIBIR PISTA DEL DIRECTOR
+        // =====================================
 
         public void ReceiveGunshotClue(
-            GunshotClue clue
+            GunshotClue newClue
         )
         {
-            /*
-             * Permitimos reemplazar una pista por otra
-             * de igual prioridad cuando es más reciente.
-             */
-            if (clue.Priority < currentPriority)
-            {
-                return;
-            }
-
-            if (!navigator.SetDestination(
-                clue.InvestigationPoint
-            ))
-            {
-                return;
-            }
-
-            currentClue = clue;
-            currentPriority = clue.Priority;
+            clue = newClue;
             hasClue = true;
 
-            CurrentState =
-                EnemyState.MovingToInvestigation;
+            
+            isCheckingArea = false;
+            checkTimer = 0f;
         }
 
-        private void UpdateMovementToInvestigation()
+        // =====================================
+        // PANDA - CONDICIONES
+        // =====================================
+
+        [Task]
+        private bool CanSeePlayer()
         {
-            if (!navigator.HasReachedDestination)
+            return fov.CanSeePlayer;
+        }
+
+        [Task]
+        private bool HasClue()
+        {
+            return hasClue;
+        }
+
+        // =====================================
+        // PANDA - PERSEGUIR
+        // =====================================
+
+        [Task]
+        private void ChasePlayer()
+        {
+            if (!fov.CanSeePlayer ||
+                fov.Player == null)
             {
+                ThisTask.Fail();
                 return;
             }
 
-            navigator.Stop();
-
-            investigationTimeRemaining =
-                investigationDuration;
-
             CurrentState =
-                EnemyState.Investigating;
+                EnemyState.Chasing;
+
+            navigator.SetDestination(
+                fov.Player.position
+            );
+
+            ThisTask.debugInfo =
+                "Persiguiendo jugador";
         }
 
-        private void UpdateInvestigation()
+        // =====================================
+        // PANDA - INVESTIGAR
+        // =====================================
+
+        [Task]
+        private void Investigate()
         {
-            investigationTimeRemaining -=
+            
+            if (fov.CanSeePlayer)
+            {
+                ThisTask.Fail();
+                return;
+            }
+
+            if (!hasClue)
+            {
+                ThisTask.Fail();
+                return;
+            }
+
+            if (!isCheckingArea)
+            {
+                CurrentState =
+                    EnemyState.MovingToInvestigation;
+
+                navigator.SetDestination(
+                    clue.InvestigationPoint
+                );
+
+                if (!navigator.HasReachedDestination)
+                {
+                    ThisTask.debugInfo =
+                        "Yendo a investigar";
+
+                    return;
+                }
+
+                navigator.Stop();
+
+                CurrentState =
+                    EnemyState.Investigating;
+
+                isCheckingArea = true;
+                checkTimer = investigationTime;
+            }
+
+            checkTimer -=
                 Time.deltaTime;
 
-            if (investigationTimeRemaining > 0f)
+            ThisTask.debugInfo =
+                "Investigando";
+
+            if (checkTimer > 0f)
             {
                 return;
             }
 
-            FinishInvestigation();
+            hasClue = false;
+            isCheckingArea = false;
+
+            navigator.Stop();
+
+            CurrentState =
+                EnemyState.Idle;
+
+            ThisTask.Succeed();
         }
 
-        private void FinishInvestigation()
+        // =====================================
+        // PANDA - IDLE
+        // =====================================
+
+        [Task]
+        private void Idle()
         {
             navigator.Stop();
 
-            hasClue = false;
-            currentPriority = idlePriority;
-            CurrentState = EnemyState.Idle;
+            CurrentState =
+                EnemyState.Idle;
+
+            ThisTask.debugInfo =
+                "Esperando";
+
+            ThisTask.Succeed();
         }
+
+        // =====================================
+        // DEBUG
+        // =====================================
 
         private void OnDrawGizmos()
         {
-            if (!Application.isPlaying || !hasClue)
+            if (!Application.isPlaying ||
+                !hasClue)
             {
                 return;
             }
 
-            Gizmos.color = Color.magenta;
+            Gizmos.color =
+                Color.magenta;
 
             Gizmos.DrawLine(
                 transform.position,
-                currentClue.InvestigationPoint
+                clue.InvestigationPoint
             );
 
             Gizmos.DrawSphere(
-                currentClue.InvestigationPoint,
+                clue.InvestigationPoint,
                 0.25f
             );
         }
