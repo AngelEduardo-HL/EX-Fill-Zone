@@ -123,8 +123,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.AI.Shared.Stimuli.GunshotEmitter
   director: {fileID: 0}
-  hearingRadius: 23
-  investigationRadius: 5
+  hearingRadius: 19.9
+  investigationRadius: 8
 --- !u!1 &6849910863691730736
 GameObject:
   m_ObjectHideFlags: 0

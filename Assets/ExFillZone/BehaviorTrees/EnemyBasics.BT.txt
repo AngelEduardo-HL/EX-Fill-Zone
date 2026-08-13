@@ -1,0 +1,11 @@
+tree("Root")
+    fallback
+        sequence
+            CanSeePlayer
+            ChasePlayer
+
+        sequence
+            HasClue
+            Investigate
+
+        Idle
