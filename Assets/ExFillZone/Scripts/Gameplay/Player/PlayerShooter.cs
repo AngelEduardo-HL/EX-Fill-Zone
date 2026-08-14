@@ -1,4 +1,3 @@
-using ExFillZone.AI.Shared.Stimuli;
 using ExFillZone.Gameplay.Combat;
 using UnityEngine;
 
@@ -6,6 +5,7 @@ namespace ExFillZone.Gameplay.Player
 {
     [RequireComponent(typeof(PlayerInputReader))]
     [RequireComponent(typeof(PlayerAimController))]
+    [RequireComponent(typeof(PlayerAmmo))]
     public sealed class PlayerShooter : MonoBehaviour
     {
         [Header("References")]
@@ -15,11 +15,9 @@ namespace ExFillZone.Gameplay.Player
         [SerializeField]
         private Transform muzzle;
 
-        [SerializeField]
-        private GunshotEmitter gunshotEmitter;
-
         private PlayerInputReader inputReader;
         private PlayerAimController aimController;
+        private PlayerAmmo ammo;
 
         private void Awake()
         {
@@ -28,6 +26,9 @@ namespace ExFillZone.Gameplay.Player
 
             aimController =
                 GetComponent<PlayerAimController>();
+
+            ammo =
+                GetComponent<PlayerAmmo>();
 
             if (weapon == null)
             {
@@ -38,12 +39,6 @@ namespace ExFillZone.Gameplay.Player
             if (muzzle == null && weapon != null)
             {
                 muzzle = weapon.transform;
-            }
-
-            if (gunshotEmitter == null)
-            {
-                gunshotEmitter =
-                    GetComponentInChildren<GunshotEmitter>();
             }
 
             if (weapon == null || muzzle == null)
@@ -72,6 +67,12 @@ namespace ExFillZone.Gameplay.Player
 
         private void Shoot()
         {
+            if (!ammo.UseAmmo())
+            {
+                Debug.Log("Sin munición.");
+                return;
+            }
+
             Vector3 direction =
                 aimController.AimDirection;
 
@@ -82,10 +83,6 @@ namespace ExFillZone.Gameplay.Player
             weapon.Fire(
                 origin,
                 direction
-            );
-
-            gunshotEmitter?.Emit(
-                muzzle.position
             );
         }
     }
