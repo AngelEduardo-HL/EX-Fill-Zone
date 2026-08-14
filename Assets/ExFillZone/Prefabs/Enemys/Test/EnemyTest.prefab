@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3017786649205147346
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7137140542474851378}
+  m_Layer: 0
+  m_Name: DropPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7137140542474851378
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3017786649205147346}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1938187373185866127}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6011252803969196441
 GameObject:
   m_ObjectHideFlags: 0
@@ -15,8 +46,8 @@ GameObject:
   - component: {fileID: 4985205699754458697}
   - component: {fileID: 7261687402796056262}
   - component: {fileID: 1637748338920678957}
-  - component: {fileID: 5044381897247771761}
   - component: {fileID: 5215573625886253422}
+  - component: {fileID: -410879114629806307}
   - component: {fileID: 7117456811728539904}
   m_Layer: 0
   m_Name: EnemyTest
@@ -39,6 +70,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 794194424683089902}
+  - {fileID: 7137140542474851378}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3435586920673476383
@@ -171,19 +203,6 @@ MonoBehaviour:
   director: {fileID: 0}
   gunshotPriority: 60
   investigationTime: 2.5
---- !u!114 &5044381897247771761
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6011252803969196441}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be052ccdbc0094647af427581d083bc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Combat.TargetHealth
-  maximumHealth: 50
 --- !u!114 &5215573625886253422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,6 +222,21 @@ MonoBehaviour:
   visionMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &-410879114629806307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6011252803969196441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf466a5fdeace464c961d4216668ade0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Combat.EnemyHealth
+  maxHealth: 50
+  ammoDrop: {fileID: 3334596666149405665, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
+  dropPoint: {fileID: 7137140542474851378}
 --- !u!114 &7117456811728539904
 MonoBehaviour:
   m_ObjectHideFlags: 0
