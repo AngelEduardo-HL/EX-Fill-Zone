@@ -1,3 +1,4 @@
+using ExFillZone.AI.Shared.Stimuli;
 using ExFillZone.Gameplay.Combat;
 using UnityEngine;
 
@@ -14,6 +15,9 @@ namespace ExFillZone.Gameplay.Player
 
         [SerializeField]
         private Transform muzzle;
+
+        [SerializeField]
+        private GunshotEmitter gunshotEmitter;
 
         private PlayerInputReader inputReader;
         private PlayerAimController aimController;
@@ -41,10 +45,18 @@ namespace ExFillZone.Gameplay.Player
                 muzzle = weapon.transform;
             }
 
-            if (weapon == null || muzzle == null)
+            if (gunshotEmitter == null)
+            {
+                gunshotEmitter =
+                    GetComponentInChildren<GunshotEmitter>();
+            }
+
+            if (weapon == null ||
+                muzzle == null ||
+                gunshotEmitter == null)
             {
                 Debug.LogError(
-                    "PlayerShooter necesita un arma y un Muzzle.",
+                    "PlayerShooter necesita Weapon, Muzzle y GunshotEmitter.",
                     this
                 );
 
@@ -80,9 +92,15 @@ namespace ExFillZone.Gameplay.Player
                 muzzle.position +
                 direction * 0.05f;
 
+            // Disparo físico.
             weapon.Fire(
                 origin,
                 direction
+            );
+
+            // Aviso del disparo a la IA.
+            gunshotEmitter.Emit(
+                muzzle.position
             );
         }
     }

@@ -6224,7 +6224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69210e4a9ee360747bbb4d05d643bccc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.GameFlow.VictoryTrigger
-  victoryScene: Menu
+  victoryScene: Victory
 --- !u!1 &1420694647
 GameObject:
   m_ObjectHideFlags: 0
