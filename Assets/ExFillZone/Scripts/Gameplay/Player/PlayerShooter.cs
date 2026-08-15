@@ -6,6 +6,7 @@ namespace ExFillZone.Gameplay.Player
 {
     [RequireComponent(typeof(PlayerInputReader))]
     [RequireComponent(typeof(PlayerAimController))]
+    [RequireComponent(typeof(PlayerAmmo))]
     public sealed class PlayerShooter : MonoBehaviour
     {
         [Header("References")]
@@ -20,6 +21,7 @@ namespace ExFillZone.Gameplay.Player
 
         private PlayerInputReader inputReader;
         private PlayerAimController aimController;
+        private PlayerAmmo ammo;
 
         private void Awake()
         {
@@ -28,6 +30,9 @@ namespace ExFillZone.Gameplay.Player
 
             aimController =
                 GetComponent<PlayerAimController>();
+
+            ammo =
+                GetComponent<PlayerAmmo>();
 
             if (weapon == null)
             {
@@ -46,10 +51,12 @@ namespace ExFillZone.Gameplay.Player
                     GetComponentInChildren<GunshotEmitter>();
             }
 
-            if (weapon == null || muzzle == null)
+            if (weapon == null ||
+                muzzle == null ||
+                gunshotEmitter == null)
             {
                 Debug.LogError(
-                    "PlayerShooter necesita un arma y un Muzzle.",
+                    "PlayerShooter necesita Weapon, Muzzle y GunshotEmitter.",
                     this
                 );
 
@@ -72,6 +79,12 @@ namespace ExFillZone.Gameplay.Player
 
         private void Shoot()
         {
+            if (!ammo.UseAmmo())
+            {
+                Debug.Log("Sin munición.");
+                return;
+            }
+
             Vector3 direction =
                 aimController.AimDirection;
 
@@ -79,12 +92,14 @@ namespace ExFillZone.Gameplay.Player
                 muzzle.position +
                 direction * 0.05f;
 
+            // Disparo físico.
             weapon.Fire(
                 origin,
                 direction
             );
 
-            gunshotEmitter?.Emit(
+            // Aviso del disparo a la IA.
+            gunshotEmitter.Emit(
                 muzzle.position
             );
         }

@@ -6224,7 +6224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69210e4a9ee360747bbb4d05d643bccc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.GameFlow.VictoryTrigger
-  victoryScene: Menu
+  victoryScene: Victory
 --- !u!1 &1420694647
 GameObject:
   m_ObjectHideFlags: 0
@@ -9831,6 +9831,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5aff1d37ce4a6b4c98db5b690638583, type: 3}
+--- !u!1001 &5786679312604749753
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3334596666149405665, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
+      propertyPath: m_Name
+      value: AmmoPickup
+      objectReference: {fileID: 0}
+    - target: {fileID: 4050307982277873806, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 17.62
+      objectReference: {fileID: 0}
+    - target: {fileID: 4050307982277873806, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 4050307982277873806, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 70.7674
+      objectReference: {fileID: 0}
+    - target: {fileID: 4050307982277873806, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4050307982277873806, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4050307982277873806, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4050307982277873806, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4050307982277873806, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4050307982277873806, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4050307982277873806, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -9842,3 +9899,4 @@ SceneRoots:
   - {fileID: 1223815736}
   - {fileID: 1945760664}
   - {fileID: 1416679013}
+  - {fileID: 5786679312604749753}

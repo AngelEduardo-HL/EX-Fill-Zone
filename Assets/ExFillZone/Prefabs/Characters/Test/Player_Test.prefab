@@ -48,6 +48,8 @@ GameObject:
   - component: {fileID: 3889276375168470857}
   - component: {fileID: 6529574627535036326}
   - component: {fileID: 852591623545884787}
+  - component: {fileID: 7843273495718228726}
+  - component: {fileID: -7933638194004599635}
   m_Layer: 0
   m_Name: Player_Test
   m_TagString: Untagged
@@ -236,7 +238,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Player.PlayerShooter
   weapon: {fileID: 8010759034989644726}
   muzzle: {fileID: 3975085101277349169}
-  gunshotEmitter: {fileID: 1299028826349593726}
+--- !u!114 &7843273495718228726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7362181706505820130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eb496f3c5ef5f64c822ebe6f4b411b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Player.PlayerAmmo
+  currentAmmo: 10
+  maxAmmo: 30
+--- !u!114 &-7933638194004599635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7362181706505820130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4fbb7fb7032a7543a9cb44a07c2b500, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Player.PlayerHealth
+  maxHealth: 100
+  defeatScene: Defeat
 --- !u!1001 &2477925431796503178
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -326,17 +355,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 779b5dc69af07934ab747e837c75a62e, type: 3}
---- !u!114 &1299028826349593726 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3486999804744857332, guid: 779b5dc69af07934ab747e837c75a62e, type: 3}
-  m_PrefabInstance: {fileID: 2477925431796503178}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25c948eae677f1f48abc45c6accfb9d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.AI.Shared.Stimuli.GunshotEmitter
 --- !u!4 &3294887818061939707 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1142391543026094449, guid: 779b5dc69af07934ab747e837c75a62e, type: 3}
