@@ -1503,7 +1503,6 @@ GameObject:
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
   - component: {fileID: 330585549}
-  - component: {fileID: 330585548}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1629,29 +1628,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!114 &330585548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 330585543}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb2764658647b774694d849ddf326df6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.CameraSystem.TopDownCameraController
-  target: {fileID: 1172543014}
-  playerAim: {fileID: 1172543015}
-  followOffset: {x: -13.5, y: 20, z: 2.5}
-  fixedRotation: {x: 55, y: 105, z: 0}
-  positionSmoothTime: 0.12
-  aimOffsetDistance: 3.5
-  normalFieldOfView: 55
-  aimingFieldOfView: 42
-  normalOrthographicSize: 8
-  aimingOrthographicSize: 6
-  zoomSmoothTime: 0.1
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5549,6 +5525,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b55ff7e7d67b2144e8daf359b6e44075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Player.PlayerAimController
+--- !u!114 &1172543021 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3646020978846842853, guid: d5aff1d37ce4a6b4c98db5b690638583, type: 3}
+  m_PrefabInstance: {fileID: 4060837172165455721}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7101a6264daaf5d49b1fab1677e1d5b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Player.PlayerInputReader
 --- !u!1001 &1174569903
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7111,6 +7098,7 @@ GameObject:
   - component: {fileID: 1558634275}
   - component: {fileID: 1558634274}
   - component: {fileID: 1558634273}
+  - component: {fileID: 1558634276}
   m_Layer: 0
   m_Name: CM_Player
   m_TagString: Untagged
@@ -7195,6 +7183,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1031960189}
   m_LocalEulerAnglesHint: {x: 50, y: 75, z: 0}
+--- !u!114 &1558634276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558634272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06bc532506af1ff4badd905c18e90686, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.CameraSystem.PlayerCameraController
+  input: {fileID: 1172543021}
+  playerAim: {fileID: 1172543015}
+  baseOffset: {x: 0, y: 14, z: -10}
+  cameraPitch: 55
+  orbitSpeed: 90
+  orbitSmoothTime: 0.1
+  normalMouseDistance: 1.25
+  aimMouseDistance: 9.5
+  mouseSmoothTime: 0.1
+  normalFOV: 55
+  aimFOV: 42
+  zoomSmoothTime: 0.3
 --- !u!1 &1569536148
 GameObject:
   m_ObjectHideFlags: 0

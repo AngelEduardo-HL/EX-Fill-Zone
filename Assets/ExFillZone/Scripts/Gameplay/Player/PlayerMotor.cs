@@ -145,9 +145,7 @@ namespace ExFillZone.Gameplay.Player
             finalVelocity.y =
                 verticalVelocity;
 
-            characterController.Move(
-                finalVelocity * Time.deltaTime
-            );
+            characterController.Move(finalVelocity * Time.deltaTime);
 
             playerStamina.Tick(
                 IsSprinting,
@@ -156,27 +154,29 @@ namespace ExFillZone.Gameplay.Player
             );
         }
 
-        private void CalculateMovementDirection(
-            Vector2 input
-        )
+        private void CalculateMovementDirection(Vector2 input)
         {
+            float cameraYaw =
+                movementReference.eulerAngles.y;
+
+            Quaternion horizontalRotation =
+                Quaternion.Euler(
+                    0f,
+                    cameraYaw,
+                    0f
+                );
+
             Vector3 cameraForward =
-                movementReference.forward;
+                horizontalRotation *
+                Vector3.forward;
 
             Vector3 cameraRight =
-                movementReference.right;
-
-            cameraForward.y = 0f;
-            cameraRight.y = 0f;
-
-            cameraForward.Normalize();
-            cameraRight.Normalize();
+                horizontalRotation *
+                Vector3.right;
 
             Vector3 desiredDirection =
                 cameraRight * input.x +
                 cameraForward * input.y;
-
-            desiredDirection.y = 0f;
 
             if (desiredDirection.sqrMagnitude > 0.001f)
             {
@@ -187,10 +187,7 @@ namespace ExFillZone.Gameplay.Player
                 desiredDirection;
         }
 
-        private void UpdateMovementSpeed(
-            bool hasMovementInput,
-            bool wasSprinting
-        )
+        private void UpdateMovementSpeed(bool hasMovementInput, bool wasSprinting)
         {
             if (!hasMovementInput)
             {
@@ -245,9 +242,7 @@ namespace ExFillZone.Gameplay.Player
                 );
         }
 
-        private void UpdateMovementDirection(
-            bool hasMovementInput
-        )
+        private void UpdateMovementDirection(bool hasMovementInput)
         {
             if (!hasMovementInput)
             {
