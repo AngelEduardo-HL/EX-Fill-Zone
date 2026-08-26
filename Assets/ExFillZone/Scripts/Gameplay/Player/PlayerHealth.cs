@@ -1,6 +1,7 @@
 using ExFillZone.Gameplay.Combat;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
 
 namespace ExFillZone.Gameplay.Player
 {
@@ -23,10 +24,19 @@ namespace ExFillZone.Gameplay.Player
         public float MaxHealth =>
             maxHealth;
 
+
+
         private void Awake()
         {
             currentHealth = maxHealth;
         }
+
+        public event Action<float, float> HealthChanged;
+
+        public float NormalizedHealth =>
+            maxHealth > 0f
+                ? currentHealth / maxHealth
+                : 0f;
 
         public override void TakeDamage(float damage)
         {
@@ -41,6 +51,10 @@ namespace ExFillZone.Gameplay.Player
                 currentHealth,
                 0f
             );
+            HealthChanged?.Invoke(
+                currentHealth,
+                maxHealth
+);
 
             Debug.Log(
                 $"Vida: {currentHealth}/{maxHealth}"
