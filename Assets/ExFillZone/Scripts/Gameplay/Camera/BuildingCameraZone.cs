@@ -201,4 +201,5 @@ namespace ExFillZone.Gameplay.CameraSystem
             material.color = color;
         }
     }
+
 }

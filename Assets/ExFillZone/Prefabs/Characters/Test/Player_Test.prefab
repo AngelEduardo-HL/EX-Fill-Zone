@@ -619,7 +619,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Player.PlayerShooter
   weapon: {fileID: 8010759034989644726}
   muzzle: {fileID: 3975085101277349169}
-  gunshotEmitter: {fileID: 0}
+  gunshotEmitter: {fileID: 1299028826349593726}
 --- !u!114 &7843273495718228726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -705,6 +705,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 779b5dc69af07934ab747e837c75a62e, type: 3}
+--- !u!114 &1299028826349593726 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3486999804744857332, guid: 779b5dc69af07934ab747e837c75a62e, type: 3}
+  m_PrefabInstance: {fileID: 2477925431796503178}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25c948eae677f1f48abc45c6accfb9d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.AI.Shared.Stimuli.GunshotEmitter
 --- !u!4 &3294887818061939707 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1142391543026094449, guid: 779b5dc69af07934ab747e837c75a62e, type: 3}
