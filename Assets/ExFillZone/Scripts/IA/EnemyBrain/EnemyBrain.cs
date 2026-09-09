@@ -101,9 +101,9 @@ namespace ExFillZone.AI.Enemy
         }
 
         [Task]
-        private bool InShootRange()
+        private bool InStopRange()
         {
-            return shooter != null && shooter.IsInRange(fov.Player);
+            return shooter != null && shooter.IsInStopRange(fov.Player);
         }
 
         [Task]
@@ -119,7 +119,7 @@ namespace ExFillZone.AI.Enemy
         [Task]
         private void ShootPlayer()
         {
-            if (!fov.CanSeePlayer || fov.Player == null || shooter == null || !shooter.IsInRange(fov.Player))
+            if (!fov.CanSeePlayer || fov.Player == null || shooter == null || !shooter.IsInStopRange(fov.Player))
             {
                 ThisTask.Fail();
                 return;
@@ -131,7 +131,7 @@ namespace ExFillZone.AI.Enemy
             shooter.FaceTarget(fov.Player);
             shooter.TryShoot(fov.Player);
 
-            ThisTask.debugInfo = "Disparando al jugador";
+            ThisTask.debugInfo = "Disparando detenido";
         }
 
         [Task]
@@ -143,9 +143,23 @@ namespace ExFillZone.AI.Enemy
                 return;
             }
 
-            CurrentState = EnemyState.Chasing;
+            if (shooter != null && shooter.IsInStopRange(fov.Player))
+            {
+                navigator.Stop();
+                ThisTask.Succeed();
+                return;
+            }
 
+            CurrentState = EnemyState.Chasing;
             navigator.SetDestination(fov.Player.position);
+
+            if (shooter != null && shooter.IsInRange(fov.Player))
+            {
+                shooter.FaceTarget(fov.Player);
+                shooter.TryShoot(fov.Player);
+                ThisTask.debugInfo = "Persiguiendo y disparando";
+                return;
+            }
 
             ThisTask.debugInfo = "Persiguiendo jugador";
         }

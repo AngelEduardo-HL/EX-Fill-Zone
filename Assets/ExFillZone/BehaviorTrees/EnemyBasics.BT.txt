@@ -2,7 +2,7 @@ tree("Root")
     fallback
         sequence
             CanSeePlayer
-            InShootRange
+            InStopRange
             ShootPlayer
 
         sequence

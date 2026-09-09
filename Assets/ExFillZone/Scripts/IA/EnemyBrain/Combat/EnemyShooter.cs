@@ -11,12 +11,14 @@ namespace ExFillZone.AI.Enemy.Combat
 
         [Header("Shooting")]
         [SerializeField, Min(0.1f)] private float shootRange = 12f;
+        [SerializeField, Min(0.1f)] private float stopRange = 5f;
         [SerializeField, Min(0.05f)] private float shootCooldown = 0.75f;
         [SerializeField, Min(0f)] private float turnSpeed = 360f;
 
         private float nextShotTime;
 
         public float ShootRange => shootRange;
+        public float StopRange => stopRange;
 
         private void Awake()
         {
@@ -32,6 +34,16 @@ namespace ExFillZone.AI.Enemy.Combat
             difference.y = 0f;
 
             return difference.sqrMagnitude <= shootRange * shootRange;
+        }
+
+        public bool IsInStopRange(Transform target)
+        {
+            if (target == null) return false;
+
+            Vector3 difference = target.position - transform.position;
+            difference.y = 0f;
+
+            return difference.sqrMagnitude <= stopRange * stopRange;
         }
 
         public void FaceTarget(Transform target)

@@ -417,7 +417,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.AI.Enemy.Combat.EnemyShooter
   weapon: {fileID: 6029335477512295910}
   muzzle: {fileID: 4222467549908891338}
-  shootRange: 17
+  shootRange: 12
+  stopRange: 5
   shootCooldown: 0.75
   turnSpeed: 360
 --- !u!114 &1637748338920678957
