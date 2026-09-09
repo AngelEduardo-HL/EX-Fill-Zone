@@ -2,6 +2,11 @@ tree("Root")
     fallback
         sequence
             CanSeePlayer
+            InShootRange
+            ShootPlayer
+
+        sequence
+            CanSeePlayer
             ChasePlayer
 
         sequence
