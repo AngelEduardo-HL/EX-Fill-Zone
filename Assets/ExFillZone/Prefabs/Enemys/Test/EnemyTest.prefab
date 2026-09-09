@@ -834,7 +834,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.AI.Enemy.Combat.EnemyShooter
   weapon: {fileID: 6029335477512295910}
   muzzle: {fileID: 4222467549908891338}
-  shootRange: 12
+  shootRange: 10
   stopRange: 5
   shootCooldown: 0.75
   turnSpeed: 360
@@ -867,7 +867,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.AI.Enemy.Perception.EnemyFOV
   player: {fileID: 0}
   eyes: {fileID: 794194424683089902}
-  viewDistance: 19
+  viewDistance: 18
   viewAngle: 90
   visionMask:
     serializedVersion: 2
@@ -885,7 +885,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf466a5fdeace464c961d4216668ade0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Combat.EnemyHealth
-  maxHealth: 50
+  maxHealth: 100
   ammoDrop: {fileID: 3334596666149405665, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
   dropPoint: {fileID: 7137140542474851378}
 --- !u!114 &2428524595656038523
@@ -900,7 +900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f6ad5379eac7de47a27771ec477a912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.AI.Enemy.Combat.EnemyContactDamage
-  damage: 10
+  damage: 11
   damageCooldown: 1
 --- !u!1 &8471401603913131469
 GameObject:
