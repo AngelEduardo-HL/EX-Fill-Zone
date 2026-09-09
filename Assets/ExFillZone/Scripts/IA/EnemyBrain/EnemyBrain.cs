@@ -6,6 +6,7 @@ using ExFillZone.AI.Shared.Enums;
 using ExFillZone.AI.Enemy.Combat;
 
 using Panda;
+using System;
 using UnityEngine;
 
 namespace ExFillZone.AI.Enemy
@@ -37,11 +38,21 @@ namespace ExFillZone.AI.Enemy
 
         private float checkTimer;
 
+        private EnemyState currentState;
+
         public EnemyState CurrentState
         {
-            get;
-            private set;
+            get => currentState;
+            private set
+            {
+                if (currentState == value) return;
+
+                currentState = value;
+                StateChanged?.Invoke(currentState);
+            }
         }
+
+        public event Action<EnemyState> StateChanged;
 
         public float GunshotPriority => gunshotPriority;
 
@@ -155,6 +166,7 @@ namespace ExFillZone.AI.Enemy
 
             if (shooter != null && shooter.IsInRange(fov.Player))
             {
+                CurrentState = EnemyState.Attacking;
                 shooter.FaceTarget(fov.Player);
                 shooter.TryShoot(fov.Player);
                 ThisTask.debugInfo = "Persiguiendo y disparando";
