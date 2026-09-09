@@ -5,6 +5,7 @@ namespace ExFillZone.AI.Shared.Enums
         Idle,
         Chasing,
         MovingToInvestigation,
-        Investigating
+        Investigating,
+        Attacking
     }
 }

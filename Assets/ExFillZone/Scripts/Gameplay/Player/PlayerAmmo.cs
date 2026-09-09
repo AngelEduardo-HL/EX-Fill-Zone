@@ -33,21 +33,18 @@ namespace ExFillZone.Gameplay.Player
             return true;
         }
 
-        public void AddAmmo(int amount)
+        public int AddAmmo(int amount)
         {
-            if (amount <= 0)
-            {
-                return;
-            }
+            if (amount <= 0) return 0;
 
-            currentAmmo = Mathf.Min(
-                currentAmmo + amount,
-                maxAmmo
-            );
+            int previousAmmo = currentAmmo;
+            currentAmmo = Mathf.Clamp(currentAmmo + amount, 0, maxAmmo);
 
-            Debug.Log(
-                $"Munición recogida. {currentAmmo}/{maxAmmo}"
-            );
+            int addedAmmo = currentAmmo - previousAmmo;
+
+            if (addedAmmo > 0) Debug.Log($"Munición: {currentAmmo}/{maxAmmo}");
+
+            return addedAmmo;
         }
     }
 }

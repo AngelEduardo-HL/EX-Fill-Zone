@@ -3,8 +3,10 @@ using ExFillZone.AI.Enemy.Navigation;
 using ExFillZone.AI.Enemy.Perception;
 using ExFillZone.AI.Shared.Data;
 using ExFillZone.AI.Shared.Enums;
+using ExFillZone.AI.Enemy.Combat;
 
 using Panda;
+using System;
 using UnityEngine;
 
 namespace ExFillZone.AI.Enemy
@@ -27,6 +29,8 @@ namespace ExFillZone.AI.Enemy
         private EnemyNavigator navigator;
         private EnemyFOV fov;
 
+        private EnemyShooter shooter;
+
         private GunshotClue clue;
 
         private bool hasClue;
@@ -34,34 +38,38 @@ namespace ExFillZone.AI.Enemy
 
         private float checkTimer;
 
+        private EnemyState currentState;
+
         public EnemyState CurrentState
         {
-            get;
-            private set;
+            get => currentState;
+            private set
+            {
+                if (currentState == value) return;
+
+                currentState = value;
+                StateChanged?.Invoke(currentState);
+            }
         }
 
-        public float GunshotPriority =>
-            gunshotPriority;
+        public event Action<EnemyState> StateChanged;
 
-        public Vector3 Position =>
-            transform.position;
+        public float GunshotPriority => gunshotPriority;
+
+        public Vector3 Position => transform.position;
 
         private void Awake()
         {
-            navigator =
-                GetComponent<EnemyNavigator>();
+            navigator = GetComponent<EnemyNavigator>();
+            shooter = GetComponent<EnemyShooter>();
 
-            fov =
-                GetComponent<EnemyFOV>();
+            fov = GetComponent<EnemyFOV>();
 
             if (director == null)
             {
-                director =
-                    FindFirstObjectByType<AIDirector>();
+                director = FindFirstObjectByType<AIDirector>();
             }
-
-            CurrentState =
-                EnemyState.Idle;
+            CurrentState = EnemyState.Idle;
         }
 
         private void OnEnable()
@@ -84,13 +92,10 @@ namespace ExFillZone.AI.Enemy
         // RECIBIR PISTA DEL DIRECTOR
         // =====================================
 
-        public void ReceiveGunshotClue(
-            GunshotClue newClue
-        )
+        public void ReceiveGunshotClue(GunshotClue newClue)
         {
             clue = newClue;
             hasClue = true;
-
             
             isCheckingArea = false;
             checkTimer = 0f;
@@ -107,6 +112,12 @@ namespace ExFillZone.AI.Enemy
         }
 
         [Task]
+        private bool InStopRange()
+        {
+            return shooter != null && shooter.IsInStopRange(fov.Player);
+        }
+
+        [Task]
         private bool HasClue()
         {
             return hasClue;
@@ -117,24 +128,52 @@ namespace ExFillZone.AI.Enemy
         // =====================================
 
         [Task]
-        private void ChasePlayer()
+        private void ShootPlayer()
         {
-            if (!fov.CanSeePlayer ||
-                fov.Player == null)
+            if (!fov.CanSeePlayer || fov.Player == null || shooter == null || !shooter.IsInStopRange(fov.Player))
             {
                 ThisTask.Fail();
                 return;
             }
 
-            CurrentState =
-                EnemyState.Chasing;
+            CurrentState = EnemyState.Attacking;
 
-            navigator.SetDestination(
-                fov.Player.position
-            );
+            navigator.Stop();
+            shooter.FaceTarget(fov.Player);
+            shooter.TryShoot(fov.Player);
 
-            ThisTask.debugInfo =
-                "Persiguiendo jugador";
+            ThisTask.debugInfo = "Disparando detenido";
+        }
+
+        [Task]
+        private void ChasePlayer()
+        {
+            if (!fov.CanSeePlayer || fov.Player == null)
+            {
+                ThisTask.Fail();
+                return;
+            }
+
+            if (shooter != null && shooter.IsInStopRange(fov.Player))
+            {
+                navigator.Stop();
+                ThisTask.Succeed();
+                return;
+            }
+
+            CurrentState = EnemyState.Chasing;
+            navigator.SetDestination(fov.Player.position);
+
+            if (shooter != null && shooter.IsInRange(fov.Player))
+            {
+                CurrentState = EnemyState.Attacking;
+                shooter.FaceTarget(fov.Player);
+                shooter.TryShoot(fov.Player);
+                ThisTask.debugInfo = "Persiguiendo y disparando";
+                return;
+            }
+
+            ThisTask.debugInfo = "Persiguiendo jugador";
         }
 
         // =====================================
@@ -144,7 +183,6 @@ namespace ExFillZone.AI.Enemy
         [Task]
         private void Investigate()
         {
-            
             if (fov.CanSeePlayer)
             {
                 ThisTask.Fail();
@@ -159,35 +197,27 @@ namespace ExFillZone.AI.Enemy
 
             if (!isCheckingArea)
             {
-                CurrentState =
-                    EnemyState.MovingToInvestigation;
+                CurrentState = EnemyState.MovingToInvestigation;
 
-                navigator.SetDestination(
-                    clue.InvestigationPoint
-                );
+                navigator.SetDestination(clue.InvestigationPoint);
 
                 if (!navigator.HasReachedDestination)
                 {
-                    ThisTask.debugInfo =
-                        "Yendo a investigar";
-
+                    ThisTask.debugInfo = "Yendo a investigar";
                     return;
                 }
 
                 navigator.Stop();
 
-                CurrentState =
-                    EnemyState.Investigating;
+                CurrentState = EnemyState.Investigating;
 
                 isCheckingArea = true;
                 checkTimer = investigationTime;
             }
 
-            checkTimer -=
-                Time.deltaTime;
+            checkTimer -= Time.deltaTime;
 
-            ThisTask.debugInfo =
-                "Investigando";
+            ThisTask.debugInfo = "Investigando";
 
             if (checkTimer > 0f)
             {
@@ -199,8 +229,7 @@ namespace ExFillZone.AI.Enemy
 
             navigator.Stop();
 
-            CurrentState =
-                EnemyState.Idle;
+            CurrentState = EnemyState.Idle;
 
             ThisTask.Succeed();
         }
@@ -229,24 +258,16 @@ namespace ExFillZone.AI.Enemy
 
         private void OnDrawGizmos()
         {
-            if (!Application.isPlaying ||
-                !hasClue)
+            if (!Application.isPlaying || !hasClue)
             {
                 return;
             }
 
-            Gizmos.color =
-                Color.magenta;
+            Gizmos.color = Color.magenta;
 
-            Gizmos.DrawLine(
-                transform.position,
-                clue.InvestigationPoint
-            );
+            Gizmos.DrawLine(transform.position, clue.InvestigationPoint);
 
-            Gizmos.DrawSphere(
-                clue.InvestigationPoint,
-                0.25f
-            );
+            Gizmos.DrawSphere(clue.InvestigationPoint, 0.25f);
         }
     }
 }

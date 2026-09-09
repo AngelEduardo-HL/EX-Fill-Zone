@@ -24,22 +24,22 @@ namespace ExFillZone.Gameplay.CameraSystem
         private Renderer[] roofParts;
 
         [SerializeField, Range(0f, 1f)]
-        private float outsideAlpha = 1f;
+        private float outsideAlpha = 0f;
 
         [SerializeField, Range(0f, 1f)]
-        private float insideAlpha = 0.1f;
+        private float insideAlpha = 0.9f;
 
         [SerializeField, Min(0.1f)]
         private float fadeSpeed = 3f;
 
-        private readonly List<Material> roofMaterials =
-            new List<Material>();
+        private readonly List<Material> roofMaterials = new List<Material>();
 
-        private float targetAlpha;
+        private float targetFade;
+        private static readonly int FadeID = Shader.PropertyToID("_Fade");
 
         private void Awake()
         {
-            targetAlpha = outsideAlpha;
+            targetFade = outsideAlpha;
 
             PrepareRoofMaterials();
 
@@ -91,7 +91,7 @@ namespace ExFillZone.Gameplay.CameraSystem
                     buildingPriority;
             }
 
-            targetAlpha = insideAlpha;
+            targetFade = insideAlpha;
         }
 
         private void ExitBuilding()
@@ -108,7 +108,7 @@ namespace ExFillZone.Gameplay.CameraSystem
                     playerPriority;
             }
 
-            targetAlpha = outsideAlpha;
+            targetFade = outsideAlpha;
         }
 
         private void PrepareRoofMaterials()
@@ -133,23 +133,16 @@ namespace ExFillZone.Gameplay.CameraSystem
         {
             foreach (Material material in roofMaterials)
             {
-                if (material == null)
+                if (material == null || !material.HasProperty(FadeID))
                 {
                     continue;
                 }
 
-                Color color = GetColor(material);
+                float currentFade = material.GetFloat(FadeID);
 
-                color.a = Mathf.MoveTowards(
-                    color.a,
-                    targetAlpha,
-                    fadeSpeed * Time.deltaTime
-                );
+                currentFade = Mathf.MoveTowards(currentFade,targetFade, fadeSpeed * Time.deltaTime);
 
-                SetColor(
-                    material,
-                    color
-                );
+                material.SetFloat(FadeID, currentFade);
             }
         }
 
@@ -163,13 +156,9 @@ namespace ExFillZone.Gameplay.CameraSystem
                 }
 
                 Color color = GetColor(material);
-
                 color.a = alpha;
 
-                SetColor(
-                    material,
-                    color
-                );
+                SetColor(material, color);
             }
         }
 
@@ -183,21 +172,13 @@ namespace ExFillZone.Gameplay.CameraSystem
             return material.color;
         }
 
-        private void SetColor(
-            Material material,
-            Color color
-        )
+        private void SetColor(Material material, Color color)
         {
             if (material.HasProperty("_BaseColor"))
             {
-                material.SetColor(
-                    "_BaseColor",
-                    color
-                );
-
+                material.SetColor("_BaseColor", color);
                 return;
             }
-
             material.color = color;
         }
     }
