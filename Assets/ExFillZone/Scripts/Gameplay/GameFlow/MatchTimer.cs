@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using ExFillZone.Gameplay.Loot;
 
 namespace ExFillZone.Gameplay.GameFlow
 {
@@ -20,6 +21,8 @@ namespace ExFillZone.Gameplay.GameFlow
 
         private void Start()
         {
+            RunLoot.Reset();
+
             remainingTime = matchDuration;
             UpdateText();
         }
