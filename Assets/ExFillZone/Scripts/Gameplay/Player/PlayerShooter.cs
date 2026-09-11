@@ -1,5 +1,6 @@
 using ExFillZone.AI.Shared.Stimuli;
 using ExFillZone.Gameplay.Combat;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace ExFillZone.Gameplay.Player
@@ -10,8 +11,8 @@ namespace ExFillZone.Gameplay.Player
     public sealed class PlayerShooter : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField]
-        private HitscanWeapon weapon;
+        [SerializeField] 
+        private ProjectileWeapon weapon;
 
         [SerializeField]
         private Transform muzzle;
@@ -23,21 +24,26 @@ namespace ExFillZone.Gameplay.Player
         private PlayerAimController aimController;
         private PlayerAmmo ammo;
 
+        [Header("Camera Feedback")]
+        [SerializeField] private CinemachineImpulseSource impulseSource;
+        [SerializeField, Min(0f)] private float shakeForce = 0.15f;
+
         private void Awake()
         {
-            inputReader =
-                GetComponent<PlayerInputReader>();
+            inputReader = GetComponent<PlayerInputReader>();
 
-            aimController =
-                GetComponent<PlayerAimController>();
+            aimController = GetComponent<PlayerAimController>();
 
-            ammo =
-                GetComponent<PlayerAmmo>();
+            ammo = GetComponent<PlayerAmmo>();
 
             if (weapon == null)
             {
-                weapon =
-                    GetComponentInChildren<HitscanWeapon>();
+                weapon = GetComponentInChildren<ProjectileWeapon>();
+            }
+
+            if (impulseSource == null)
+            {
+                impulseSource = GetComponentInChildren<CinemachineImpulseSource>();
             }
 
             if (muzzle == null && weapon != null)
@@ -47,19 +53,12 @@ namespace ExFillZone.Gameplay.Player
 
             if (gunshotEmitter == null)
             {
-                gunshotEmitter =
-                    GetComponentInChildren<GunshotEmitter>();
+                gunshotEmitter = GetComponentInChildren<GunshotEmitter>();
             }
 
-            if (weapon == null ||
-                muzzle == null ||
-                gunshotEmitter == null)
+            if (weapon == null || muzzle == null || gunshotEmitter == null)
             {
-                Debug.LogError(
-                    "PlayerShooter necesita Weapon, Muzzle y GunshotEmitter.",
-                    this
-                );
-
+                Debug.LogError("PlayerShooter necesita Weapon, Muzzle y GunshotEmitter.", this);
                 enabled = false;
             }
         }
@@ -93,15 +92,11 @@ namespace ExFillZone.Gameplay.Player
                 direction * 0.05f;
 
             // Disparo físico.
-            weapon.Fire(
-                origin,
-                direction
-            );
-
-            // Aviso del disparo a la IA.
-            gunshotEmitter.Emit(
-                muzzle.position
-            );
+            weapon.Fire(origin, direction);
+            // Emitir estímulo de disparo.
+            gunshotEmitter?.Emit(muzzle.position);
+            // Agitar la cámara.
+            impulseSource?.GenerateImpulseWithForce(shakeForce);
         }
     }
 }

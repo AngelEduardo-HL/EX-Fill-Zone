@@ -6,7 +6,7 @@ namespace ExFillZone.AI.Enemy.Combat
     public sealed class EnemyShooter : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private HitscanWeapon weapon;
+        [SerializeField] private ProjectileWeapon weapon;
         [SerializeField] private Transform muzzle;
 
         [Header("Shooting")]
@@ -22,7 +22,7 @@ namespace ExFillZone.AI.Enemy.Combat
 
         private void Awake()
         {
-            if (weapon == null) weapon = GetComponentInChildren<HitscanWeapon>();
+            if (weapon == null) weapon = GetComponentInChildren<ProjectileWeapon>();
             if (muzzle == null && weapon != null) muzzle = weapon.transform;
         }
 
