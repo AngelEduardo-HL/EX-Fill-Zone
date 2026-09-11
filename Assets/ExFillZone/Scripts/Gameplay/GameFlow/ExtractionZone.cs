@@ -79,7 +79,7 @@ namespace ExFillZone.Gameplay.GameFlow
         private void UpdateText()
         {
             if (extractionText == null) return;
-            extractionText.text = $"EXTRACTION: {remainingTime:0.0}";
+            extractionText.text = $"{remainingTime:0.0}";
         }
 
         private void CompleteExtraction()
