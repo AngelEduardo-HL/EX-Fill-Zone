@@ -6,12 +6,12 @@ namespace ExFillZone.Gameplay.Inventory
     [Serializable]
     public sealed class EquipmentLoadout
     {
-        [SerializeField] private ItemInstance helmet;
-        [SerializeField] private ItemInstance bodyArmor;
-        [SerializeField] private ItemInstance tacticalRig;
-        [SerializeField] private ItemInstance backpack;
-        [SerializeField] private ItemInstance primaryWeapon;
-        [SerializeField] private ItemInstance secondaryWeapon;
+        [SerializeReference] private ItemInstance helmet;
+        [SerializeReference] private ItemInstance bodyArmor;
+        [SerializeReference] private ItemInstance tacticalRig;
+        [SerializeReference] private ItemInstance backpack;
+        [SerializeReference] private ItemInstance primaryWeapon;
+        [SerializeReference] private ItemInstance secondaryWeapon;
 
         public InventoryGrid RigInventory => tacticalRig?.Contents;
         public InventoryGrid BackpackInventory => backpack?.Contents;
@@ -76,7 +76,29 @@ namespace ExFillZone.Gameplay.Inventory
             if (!source.Contains(item) || GetItem(slot) != null) return false;
             if (item.Quantity != 1 || !IsValidForSlot(item.Definition, slot)) return false;
 
+            InventoryPlacement original = null;
+
+            foreach (InventoryPlacement placement in source.Placements)
+            {
+                if (ReferenceEquals(placement.Item, item))
+                {
+                    original = placement;
+                    break;
+                }
+            }
+
+            if (original == null) return false;
+
+            Vector2Int previousPosition = original.Position;
+            bool previousRotation = original.Rotated;
+
             if (!source.TryRemove(item)) return false;
+
+            if (!item.TryClaim(this))
+            {
+                source.TryPlace(item, previousPosition, previousRotation);
+                return false;
+            }
 
             SetItem(slot, item);
             return true;
@@ -88,7 +110,15 @@ namespace ExFillZone.Gameplay.Inventory
 
             if (item == null || destination == null) return false;
             if (ReferenceEquals(item.Contents, destination)) return false;
-            if (!destination.TryPlace(item, position, rotated)) return false;
+            if (!item.IsOwnedBy(this) || !destination.CanPlace(item, position, rotated)) return false;
+
+            if (!item.TryRelease(this)) return false;
+
+            if (!destination.TryPlace(item, position, rotated))
+            {
+                item.TryClaim(this);
+                return false;
+            }
 
             SetItem(slot, null);
             return true;

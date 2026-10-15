@@ -6186,6 +6186,94 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 491334140}
   m_CullTransparentMesh: 1
+--- !u!1 &508476057
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 508476060}
+  - component: {fileID: 508476059}
+  - component: {fileID: 508476058}
+  m_Layer: 0
+  m_Name: InventoryEquipmetTest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &508476058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508476057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddc952a5c7a420c4bb73801f8965db98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.EquipmentTestRunner
+  backpackDefinition: {fileID: 11400000, guid: 84d72df00d3e7fc4fbbf98d0df069849, type: 2}
+  rigDefinition: {fileID: 11400000, guid: 21eef3dc851430c4798b19972eb857fe, type: 2}
+  helmetDefinition: {fileID: 11400000, guid: 8690e45321a66a644bf5f442a1702a70, type: 2}
+  rifleDefinition: {fileID: 11400000, guid: 6631b1caa14d5854d801ab4ec5b3accd, type: 2}
+  medkitDefinition: {fileID: 11400000, guid: aece8372e5a69884187e887a36d96f91, type: 2}
+--- !u!114 &508476059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508476057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19432e2f4d23b844b9810615cba41234, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.CharacterInventory
+  pocketColumns: 8
+  pocketRows: 6
+  equipment:
+    rid: 3698690386232082528
+  pockets:
+    rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3698690386232082528
+      type: {class: EquipmentLoadout, ns: ExFillZone.Gameplay.Inventory, asm: Assembly-CSharp}
+      data:
+        helmet:
+          rid: -2
+        bodyArmor:
+          rid: -2
+        tacticalRig:
+          rid: -2
+        backpack:
+          rid: -2
+        primaryWeapon:
+          rid: -2
+        secondaryWeapon:
+          rid: -2
+--- !u!4 &508476060
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508476057}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 16.49031, y: 0, z: 85.07209}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &508483113
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19154,129 +19242,6 @@ Transform:
   - {fileID: 1874906017}
   m_Father: {fileID: 1223815736}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1571995940
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1571995943}
-  - component: {fileID: 1571995942}
-  - component: {fileID: 1571995941}
-  m_Layer: 0
-  m_Name: InventoryEquipmetTest
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1571995941
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1571995940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddc952a5c7a420c4bb73801f8965db98, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.EquipmentTestRunner
-  backpackDefinition: {fileID: 11400000, guid: 84d72df00d3e7fc4fbbf98d0df069849, type: 2}
-  rigDefinition: {fileID: 11400000, guid: 21eef3dc851430c4798b19972eb857fe, type: 2}
-  helmetDefinition: {fileID: 11400000, guid: 8690e45321a66a644bf5f442a1702a70, type: 2}
-  rifleDefinition: {fileID: 11400000, guid: 6631b1caa14d5854d801ab4ec5b3accd, type: 2}
-  medkitDefinition: {fileID: 11400000, guid: aece8372e5a69884187e887a36d96f91, type: 2}
---- !u!114 &1571995942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1571995940}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19432e2f4d23b844b9810615cba41234, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.CharacterInventory
-  pocketColumns: 8
-  pocketRows: 6
-  equipment:
-    helmet:
-      instanceId: 
-      definition: {fileID: 0}
-      quantity: 0
-      durability: 0
-      contents:
-        width: 0
-        height: 0
-        placements: []
-    bodyArmor:
-      instanceId: 
-      definition: {fileID: 0}
-      quantity: 0
-      durability: 0
-      contents:
-        width: 0
-        height: 0
-        placements: []
-    tacticalRig:
-      instanceId: 
-      definition: {fileID: 0}
-      quantity: 0
-      durability: 0
-      contents:
-        width: 0
-        height: 0
-        placements: []
-    backpack:
-      instanceId: 
-      definition: {fileID: 0}
-      quantity: 0
-      durability: 0
-      contents:
-        width: 0
-        height: 0
-        placements: []
-    primaryWeapon:
-      instanceId: 
-      definition: {fileID: 0}
-      quantity: 0
-      durability: 0
-      contents:
-        width: 0
-        height: 0
-        placements: []
-    secondaryWeapon:
-      instanceId: 
-      definition: {fileID: 0}
-      quantity: 0
-      durability: 0
-      contents:
-        width: 0
-        height: 0
-        placements: []
-  pockets:
-    width: 0
-    height: 0
-    placements: []
---- !u!4 &1571995943
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1571995940}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1579242086
 GameObject:
   m_ObjectHideFlags: 0
@@ -28572,4 +28537,4 @@ SceneRoots:
   - {fileID: 891171863}
   - {fileID: 1482547395}
   - {fileID: 1751961823}
-  - {fileID: 1571995943}
+  - {fileID: 508476060}

@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace ExFillZone.Gameplay.Inventory
 {
     [Serializable]
     public sealed class InventoryPlacement
     {
-        [SerializeField] private ItemInstance item;
+        [SerializeReference] private ItemInstance item;
         [SerializeField] private Vector2Int position;
         [SerializeField] private bool rotated;
-
+        
         public ItemInstance Item => item;
         public Vector2Int Position => position;
         public bool Rotated => rotated;
@@ -45,15 +46,18 @@ namespace ExFillZone.Gameplay.Inventory
         [SerializeField, Min(1)] private int width = 1;
         [SerializeField, Min(1)] private int height = 1;
         [SerializeField] private List<InventoryPlacement> placements = new List<InventoryPlacement>();
+        [SerializeField] private bool acceptsContainers = true;
 
+        public bool AcceptsContainers => acceptsContainers;
         public int Width => width;
         public int Height => height;
         public IReadOnlyList<InventoryPlacement> Placements => placements;
 
-        public InventoryGrid(int width, int height)
+        public InventoryGrid(int width, int height, bool acceptsContainers = true)
         {
             this.width = Mathf.Max(1, width);
             this.height = Mathf.Max(1, height);
+            this.acceptsContainers = acceptsContainers;
         }
 
         public bool CanPlace(ItemInstance item, Vector2Int position, bool rotated = false)
@@ -64,6 +68,7 @@ namespace ExFillZone.Gameplay.Inventory
         private bool CanPlaceInternal(ItemInstance item, Vector2Int position, bool rotated, InventoryPlacement ignored)
         {
             if (item?.Definition == null || item.Quantity <= 0) return false;
+            if (!acceptsContainers && item.Contents != null) return false;
 
             Vector2Int size = item.Definition.GridSize;
             if (rotated) size = new Vector2Int(size.y, size.x);
@@ -83,6 +88,7 @@ namespace ExFillZone.Gameplay.Inventory
         public bool TryPlace(ItemInstance item, Vector2Int position, bool rotated = false)
         {
             if (Contains(item) || !CanPlace(item, position, rotated)) return false;
+            if (!item.TryClaim(this)) return false;
 
             placements.Add(new InventoryPlacement(item, position, rotated));
             return true;
@@ -112,7 +118,7 @@ namespace ExFillZone.Gameplay.Inventory
         public bool TryMove(ItemInstance item, Vector2Int position, bool rotated)
         {
             InventoryPlacement current = placements.Find(p => ReferenceEquals(p.Item, item));
-            if (current == null || !CanPlaceInternal(item, position, rotated, current)) return false;
+            if (current == null || !item.IsOwnedBy(this) || !CanPlaceInternal(item, position, rotated, current)) return false;
 
             current.SetPosition(position, rotated);
             return true;
@@ -121,7 +127,11 @@ namespace ExFillZone.Gameplay.Inventory
         public bool TryRemove(ItemInstance item)
         {
             InventoryPlacement current = placements.Find(p => ReferenceEquals(p.Item, item));
-            return current != null && placements.Remove(current);
+            if (current == null || !item.IsOwnedBy(this)) return false;
+            if (!item.TryRelease(this)) return false;
+
+            placements.Remove(current);
+            return true;
         }
 
         public bool Contains(ItemInstance item)

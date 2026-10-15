@@ -73,6 +73,14 @@ namespace ExFillZone.Gameplay.Inventory
             bool weightPreserved = Mathf.Approximately(weightBefore, inventory.TotalWeight);
             bool valuePreserved = valueBefore == inventory.TotalValue;
 
+            InventoryGrid ground = new InventoryGrid(8, 6);
+            bool duplicateBlocked = !ground.TryAutoPlace(backpack);
+
+            ItemInstance anotherBackpack = new ItemInstance(backpackDefinition);
+            bool nestingBlocked = !equipment.RigInventory.TryAutoPlace(anotherBackpack);
+
+            bool ownershipPreserved = pockets.Contains(backpack) && !ground.Contains(backpack);
+
             Debug.Log($"[Equipment] Initial items stored: {stored}", this);
             Debug.Log($"[Equipment] Invalid equipment blocked: {invalidEquipmentBlocked}", this);
             Debug.Log($"[Equipment] Backpack equipped: {backpackEquipped}", this);
@@ -87,6 +95,9 @@ namespace ExFillZone.Gameplay.Inventory
             Debug.Log($"[Equipment] Weight preserved: {weightPreserved}", this);
             Debug.Log($"[Equipment] Value preserved: {valuePreserved}", this);
             Debug.Log($"[Equipment] Final weight: {inventory.TotalWeight:0.##} kg, value: ${inventory.TotalValue:N0}", this);
+            Debug.Log($"[Safety] Duplicate blocked: {duplicateBlocked}", this);
+            Debug.Log($"[Safety] Container nesting blocked: {nestingBlocked}", this);
+            Debug.Log($"[Safety] Ownership preserved: {ownershipPreserved}", this);
         }
     }
 }

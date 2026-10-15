@@ -9,10 +9,10 @@ namespace ExFillZone.Gameplay.Inventory
         [SerializeField, Min(1)] private int pocketRows = 2;
 
         [Header("Equipment")]
-        [SerializeField] private EquipmentLoadout equipment = new EquipmentLoadout();
+        [SerializeReference] private EquipmentLoadout equipment = new EquipmentLoadout();
 
         [Header("Runtime Inventory")]
-        [SerializeField] private InventoryGrid pockets;
+        [SerializeReference] private InventoryGrid pockets;
 
         public InventoryGrid Pockets => pockets;
         public EquipmentLoadout Equipment => equipment;
