@@ -18063,7 +18063,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1482547394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18076,8 +18076,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac3723f48e92b3e4d9a34f2a8ff3fb25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.InventoryTestRunner
-  rifleDefinition: {fileID: 11400000, guid: aece8372e5a69884187e887a36d96f91, type: 2}
-  medkitDefinition: {fileID: 11400000, guid: 6631b1caa14d5854d801ab4ec5b3accd, type: 2}
+  FirstItem: {fileID: 11400000, guid: 6631b1caa14d5854d801ab4ec5b3accd, type: 2}
+  SecItem: {fileID: 11400000, guid: aece8372e5a69884187e887a36d96f91, type: 2}
 --- !u!4 &1482547395
 Transform:
   m_ObjectHideFlags: 0
@@ -19153,6 +19153,129 @@ Transform:
   - {fileID: 1427472039}
   - {fileID: 1874906017}
   m_Father: {fileID: 1223815736}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1571995940
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1571995943}
+  - component: {fileID: 1571995942}
+  - component: {fileID: 1571995941}
+  m_Layer: 0
+  m_Name: InventoryEquipmetTest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1571995941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571995940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddc952a5c7a420c4bb73801f8965db98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.EquipmentTestRunner
+  backpackDefinition: {fileID: 11400000, guid: 84d72df00d3e7fc4fbbf98d0df069849, type: 2}
+  rigDefinition: {fileID: 11400000, guid: 21eef3dc851430c4798b19972eb857fe, type: 2}
+  helmetDefinition: {fileID: 11400000, guid: 8690e45321a66a644bf5f442a1702a70, type: 2}
+  rifleDefinition: {fileID: 11400000, guid: 6631b1caa14d5854d801ab4ec5b3accd, type: 2}
+  medkitDefinition: {fileID: 11400000, guid: aece8372e5a69884187e887a36d96f91, type: 2}
+--- !u!114 &1571995942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571995940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19432e2f4d23b844b9810615cba41234, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.CharacterInventory
+  pocketColumns: 8
+  pocketRows: 6
+  equipment:
+    helmet:
+      instanceId: 
+      definition: {fileID: 0}
+      quantity: 0
+      durability: 0
+      contents:
+        width: 0
+        height: 0
+        placements: []
+    bodyArmor:
+      instanceId: 
+      definition: {fileID: 0}
+      quantity: 0
+      durability: 0
+      contents:
+        width: 0
+        height: 0
+        placements: []
+    tacticalRig:
+      instanceId: 
+      definition: {fileID: 0}
+      quantity: 0
+      durability: 0
+      contents:
+        width: 0
+        height: 0
+        placements: []
+    backpack:
+      instanceId: 
+      definition: {fileID: 0}
+      quantity: 0
+      durability: 0
+      contents:
+        width: 0
+        height: 0
+        placements: []
+    primaryWeapon:
+      instanceId: 
+      definition: {fileID: 0}
+      quantity: 0
+      durability: 0
+      contents:
+        width: 0
+        height: 0
+        placements: []
+    secondaryWeapon:
+      instanceId: 
+      definition: {fileID: 0}
+      quantity: 0
+      durability: 0
+      contents:
+        width: 0
+        height: 0
+        placements: []
+  pockets:
+    width: 0
+    height: 0
+    placements: []
+--- !u!4 &1571995943
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1571995940}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1579242086
 GameObject:
@@ -22029,6 +22152,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1751539157}
   m_CullTransparentMesh: 1
+--- !u!1 &1751961821
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1751961823}
+  - component: {fileID: 1751961822}
+  m_Layer: 0
+  m_Name: InventoryContaonerTest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &1751961822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751961821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e75c2cf56d23a34dbb3375d0ff93d1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.InventoryContainerTestRunner
+  backpackDefinition: {fileID: 11400000, guid: 84d72df00d3e7fc4fbbf98d0df069849, type: 2}
+  rifleDefinition: {fileID: 11400000, guid: 6631b1caa14d5854d801ab4ec5b3accd, type: 2}
+  medkitDefinition: {fileID: 11400000, guid: aece8372e5a69884187e887a36d96f91, type: 2}
+--- !u!4 &1751961823
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751961821}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1760236904
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28401,3 +28571,5 @@ SceneRoots:
   - {fileID: 1945760664}
   - {fileID: 891171863}
   - {fileID: 1482547395}
+  - {fileID: 1751961823}
+  - {fileID: 1571995943}
