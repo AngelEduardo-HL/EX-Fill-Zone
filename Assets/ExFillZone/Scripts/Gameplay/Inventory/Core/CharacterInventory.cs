@@ -22,6 +22,7 @@ namespace ExFillZone.Gameplay.Inventory
 
         public float TotalWeight => (pockets?.TotalWeight ?? 0f) + equipment.TotalWeight;
         public int TotalValue => (pockets?.TotalValue ?? 0) + equipment.TotalValue;
+        public float ArmorMitigation => equipment?.ArmorMitigation ?? 0f;
 
         private void Awake()
         {

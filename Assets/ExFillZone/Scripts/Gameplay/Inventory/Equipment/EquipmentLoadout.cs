@@ -16,6 +16,24 @@ namespace ExFillZone.Gameplay.Inventory
         public InventoryGrid RigInventory => tacticalRig?.Contents;
         public InventoryGrid BackpackInventory => backpack?.Contents;
 
+        [Header("Armor Balance")]
+        [SerializeField, Range(0f, 1f)] private float maxArmorMitigation = 0.8f;
+
+        public float ArmorMitigation
+        {
+            get
+            {
+                float total = GetArmorMitigation(helmet) + GetArmorMitigation(bodyArmor);
+                return Mathf.Min(total, maxArmorMitigation);
+            }
+        }
+
+        private float GetArmorMitigation(ItemInstance item)
+        {
+            if (item?.Definition is not ArmorDefinition armor) return 0f;
+            return armor.GetMitigation(item.Durability);
+        }
+
         public float TotalWeight =>
             GetWeight(helmet) + GetWeight(bodyArmor) + GetWeight(tacticalRig) +
             GetWeight(backpack) + GetWeight(primaryWeapon) + GetWeight(secondaryWeapon);
