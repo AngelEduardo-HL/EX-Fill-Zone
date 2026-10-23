@@ -7,6 +7,7 @@ namespace ExFillZone.Gameplay.Inventory
     {
         [Header("UI")]
         [SerializeField] private PlayerInventoryPanelsUI playerPanels;
+        [SerializeField] private PlayerEquipmentPanelUI equipmentPanel;
         [SerializeField] private InventoryGridView groundView;
 
         [Header("Test Items")]
@@ -14,16 +15,22 @@ namespace ExFillZone.Gameplay.Inventory
         [SerializeField] private ItemDefinition medkitDefinition;
         [SerializeField] private ContainerDefinition rigDefinition;
         [SerializeField] private ContainerDefinition backpackDefinition;
+        [SerializeField] private ArmorDefinition helmetDefinition;
+        [SerializeField] private ArmorDefinition bodyArmorDefinition;
 
         private CharacterInventory character;
         private InventoryGrid ground;
         private ItemInstance rigItem;
         private ItemInstance backpackItem;
+        private ItemInstance helmetItem;
+        private ItemInstance bodyArmorItem;
 
         private void Start()
         {
-            if (playerPanels == null || groundView == null || rifleDefinition == null ||
-                medkitDefinition == null || rigDefinition == null || backpackDefinition == null)
+            if (playerPanels == null || equipmentPanel == null || groundView == null ||
+                rifleDefinition == null || medkitDefinition == null ||
+                rigDefinition == null || backpackDefinition == null ||
+                helmetDefinition == null || bodyArmorDefinition == null)
             {
                 Debug.LogError("[VisualTest] Faltan referencias.", this);
                 return;
@@ -32,39 +39,58 @@ namespace ExFillZone.Gameplay.Inventory
             character = GetComponent<CharacterInventory>();
             ground = new InventoryGrid(7, 13);
 
-            bool rifleAdded = character.Pockets.TryAutoPlace(new ItemInstance(rifleDefinition));
-            bool medkitAdded = character.Pockets.TryAutoPlace(new ItemInstance(medkitDefinition));
+            // Objetos independientes para Hands y Ground.
+            bool handsReady = character.Pockets.TryAutoPlace(new ItemInstance(rifleDefinition)) &&
+                              character.Pockets.TryAutoPlace(new ItemInstance(medkitDefinition));
 
-            ground.TryAutoPlace(new ItemInstance(rifleDefinition));
+            bool groundReady = ground.TryAutoPlace(new ItemInstance(rifleDefinition));
 
             for (int i = 0; i < 4; i++)
-                ground.TryAutoPlace(new ItemInstance(medkitDefinition));
+                groundReady &= ground.TryAutoPlace(new ItemInstance(medkitDefinition));
 
+            // Contenedores y equipo de prueba.
             rigItem = new ItemInstance(rigDefinition);
             backpackItem = new ItemInstance(backpackDefinition);
+            helmetItem = new ItemInstance(helmetDefinition);
+            bodyArmorItem = new ItemInstance(bodyArmorDefinition);
+
+            ItemInstance primary = new ItemInstance(rifleDefinition);
+            ItemInstance secondary = new ItemInstance(rifleDefinition);
 
             bool rigFilled = rigItem.Contents.TryAutoPlace(new ItemInstance(medkitDefinition));
             bool backpackFilled = backpackItem.Contents.TryAutoPlace(new ItemInstance(rifleDefinition));
 
-            bool rigOnGround = ground.TryAutoPlace(rigItem);
-            bool backpackOnGround = ground.TryAutoPlace(backpackItem);
+            groundReady &= ground.TryAutoPlace(rigItem);
+            groundReady &= ground.TryAutoPlace(backpackItem);
+            groundReady &= ground.TryAutoPlace(helmetItem);
+            groundReady &= ground.TryAutoPlace(bodyArmorItem);
+            groundReady &= ground.TryAutoPlace(primary);
+            groundReady &= ground.TryAutoPlace(secondary);
 
-            if (!rigOnGround || !backpackOnGround)
+            if (!handsReady || !groundReady || !rigFilled || !backpackFilled)
             {
-                Debug.LogError("[VisualTest] No hay espacio para el equipo de prueba.", this);
+                Debug.LogError("[VisualTest] No se pudo preparar el inventario de prueba.", this);
                 return;
             }
 
-            bool rigEquipped = character.Equipment.TryEquip(ground, rigItem, EquipmentSlotType.TacticalRig);
-            bool backpackEquipped = character.Equipment.TryEquip(ground, backpackItem, EquipmentSlotType.Backpack);
+            EquipmentLoadout equipment = character.Equipment;
+
+            bool rigEquipped = equipment.TryEquip(ground, rigItem, EquipmentSlotType.TacticalRig);
+            bool backpackEquipped = equipment.TryEquip(ground, backpackItem, EquipmentSlotType.Backpack);
+            bool helmetEquipped = equipment.TryEquip(ground, helmetItem, EquipmentSlotType.Helmet);
+            bool armorEquipped = equipment.TryEquip(ground, bodyArmorItem, EquipmentSlotType.BodyArmor);
+            bool primaryEquipped = equipment.TryEquip(ground, primary, EquipmentSlotType.PrimaryWeapon);
+            bool secondaryEquipped = equipment.TryEquip(ground, secondary, EquipmentSlotType.SecondaryWeapon);
 
             playerPanels.Bind(character);
+            equipmentPanel.Bind(character);
             groundView.ShowGrid(ground);
 
-            Debug.Log($"[VisualTest] Hands items: {rifleAdded && medkitAdded}", this);
-            Debug.Log($"[VisualTest] Rig filled: {rigFilled}, equipped: {rigEquipped}", this);
-            Debug.Log($"[VisualTest] Backpack filled: {backpackFilled}, equipped: {backpackEquipped}", this);
-            Debug.Log("[VisualTest] F7: Rig | F8: Backpack", this);
+            Debug.Log($"[VisualTest] Rig: {rigEquipped}, Backpack: {backpackEquipped}", this);
+            Debug.Log($"[VisualTest] Helmet: {helmetEquipped}, BodyArmor: {armorEquipped}", this);
+            Debug.Log($"[VisualTest] Primary: {primaryEquipped}, Secondary: {secondaryEquipped}", this);
+            Debug.Log($"[VisualTest] Weight: {character.TotalWeight:0.0} KG", this);
+            Debug.Log("[VisualTest] F7: Rig | F8: Backpack | F9: Helmet | F10: BodyArmor", this);
         }
 
         private void Update()
@@ -76,6 +102,12 @@ namespace ExFillZone.Gameplay.Inventory
 
             if (Input.GetKeyDown(KeyCode.F8))
                 ToggleEquipment(EquipmentSlotType.Backpack, backpackItem);
+
+            if (Input.GetKeyDown(KeyCode.F9))
+                ToggleEquipment(EquipmentSlotType.Helmet, helmetItem);
+
+            if (Input.GetKeyDown(KeyCode.F10))
+                ToggleEquipment(EquipmentSlotType.BodyArmor, bodyArmorItem);
         }
 
         private void ToggleEquipment(EquipmentSlotType slot, ItemInstance item)
@@ -93,12 +125,13 @@ namespace ExFillZone.Gameplay.Inventory
             }
 
             playerPanels.Refresh();
+            equipmentPanel.Refresh();
             groundView.Refresh();
 
             bool nowEquipped = ReferenceEquals(character.Equipment.GetItem(slot), item);
 
             Debug.Log($"[VisualTest] {slot} equipped: {nowEquipped}", this);
-            Debug.Log($"[VisualTest] {slot} contents preserved: {item.Contents.Placements.Count == 1}", this);
+            Debug.Log($"[VisualTest] Weight: {character.TotalWeight:0.0} KG", this);
         }
     }
 }
