@@ -3839,6 +3839,7 @@ GameObject:
   m_Component:
   - component: {fileID: 332315444}
   - component: {fileID: 332315445}
+  - component: {fileID: 332315446}
   m_Layer: 5
   m_Name: Grid_Hands
   m_TagString: Untagged
@@ -3887,6 +3888,27 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &332315446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332315443}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 825a26a38e57e0144ae9994b3b58bff5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.InventoryGridView
+  cellsRoot: {fileID: 1100289714}
+  itemsRoot: {fileID: 586377013}
+  cellsLayout: {fileID: 1100289715}
+  layoutElement: {fileID: 332315445}
+  cellPrefab: {fileID: -6797888689217776416, guid: 54b9367bfc3b27042b2ed8f1e663ac77, type: 3}
+  itemPrefab: {fileID: 5629982929974686008, guid: 677390c8b4087be4089b421d78998c15, type: 3}
+  cellSize: {x: 82, y: 82}
+  spacing: {x: 4, y: 4}
+  padding: 6
 --- !u!1 &338177548
 GameObject:
   m_ObjectHideFlags: 0
@@ -4496,7 +4518,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 302, y: 8}
+  m_AnchoredPosition: {x: 302, y: 8.000061}
   m_SizeDelta: {x: 604, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &374355121
@@ -9325,6 +9347,94 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &845555803
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 845555806}
+  - component: {fileID: 845555805}
+  - component: {fileID: 845555804}
+  m_Layer: 0
+  m_Name: InventoryVisualTest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &845555804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845555803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 323645e455d30ba478762764688e7fd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.InventoryVisualTestController
+  handsView: {fileID: 332315446}
+  groundView: {fileID: 1488941164}
+  rifleDefinition: {fileID: 11400000, guid: 6631b1caa14d5854d801ab4ec5b3accd, type: 2}
+  medkitDefinition: {fileID: 11400000, guid: aece8372e5a69884187e887a36d96f91, type: 2}
+--- !u!114 &845555805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845555803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19432e2f4d23b844b9810615cba41234, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.CharacterInventory
+  pocketColumns: 7
+  pocketRows: 2
+  equipment:
+    rid: 3698690570154672205
+  pockets:
+    rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 3698690570154672205
+      type: {class: EquipmentLoadout, ns: ExFillZone.Gameplay.Inventory, asm: Assembly-CSharp}
+      data:
+        helmet:
+          rid: -2
+        bodyArmor:
+          rid: -2
+        tacticalRig:
+          rid: -2
+        backpack:
+          rid: -2
+        primaryWeapon:
+          rid: -2
+        secondaryWeapon:
+          rid: -2
+        maxArmorMitigation: 0.8
+--- !u!4 &845555806
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845555803}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 200.38805, y: 920.2786, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15844,8 +15954,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 88514980}
   m_HandleRect: {fileID: 88514979}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.4797667
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -16242,6 +16352,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1387597344}
+  - component: {fileID: 1387597345}
   m_Layer: 5
   m_Name: Cells
   m_TagString: Untagged
@@ -16268,6 +16379,30 @@ RectTransform:
   m_AnchoredPosition: {x: 302, y: 16}
   m_SizeDelta: {x: 604, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1387597345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1387597343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GridLayoutGroup
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 100, y: 100}
+  m_Spacing: {x: 0, y: 0}
+  m_Constraint: 1
+  m_ConstraintCount: 7
 --- !u!1 &1388164239
 GameObject:
   m_ObjectHideFlags: 0
@@ -17523,6 +17658,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1488941162}
   - component: {fileID: 1488941163}
+  - component: {fileID: 1488941164}
   m_Layer: 5
   m_Name: Grid_Ground
   m_TagString: Untagged
@@ -17567,10 +17703,31 @@ MonoBehaviour:
   m_MinWidth: -1
   m_MinHeight: -1
   m_PreferredWidth: -1
-  m_PreferredHeight: 1800
+  m_PreferredHeight: 850
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &1488941164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488941161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 825a26a38e57e0144ae9994b3b58bff5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.InventoryGridView
+  cellsRoot: {fileID: 1387597344}
+  itemsRoot: {fileID: 373776467}
+  cellsLayout: {fileID: 1387597345}
+  layoutElement: {fileID: 1488941163}
+  cellPrefab: {fileID: -6797888689217776416, guid: 54b9367bfc3b27042b2ed8f1e663ac77, type: 3}
+  itemPrefab: {fileID: 5629982929974686008, guid: 677390c8b4087be4089b421d78998c15, type: 3}
+  cellSize: {x: 82, y: 82}
+  spacing: {x: 4, y: 4}
+  padding: 6
 --- !u!1001 &1491850256
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27087,3 +27244,4 @@ SceneRoots:
   - {fileID: 1751961823}
   - {fileID: 508476060}
   - {fileID: 1365410659}
+  - {fileID: 845555806}
