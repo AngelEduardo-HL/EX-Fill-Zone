@@ -20,6 +20,11 @@ namespace ExFillZone.Gameplay.Inventory
         [SerializeField] private Vector2 spacing = new Vector2(4f, 4f);
         [SerializeField, Min(0)] private int padding = 6;
 
+        [Header("Drag & Drop")]
+        [SerializeField] private InventoryDragController dragController;
+
+        public InventoryGrid Grid => inventory;
+
         private InventoryGrid inventory;
 
         public void ShowGrid(InventoryGrid grid)
@@ -62,7 +67,7 @@ namespace ExFillZone.Gameplay.Inventory
             foreach (InventoryPlacement placement in inventory.Placements)
             {
                 InventoryItemUI visual = Instantiate(itemPrefab, itemsRoot, false);
-                visual.Setup(placement.Item);
+                visual.Setup(placement.Item, this, dragController);
 
                 RectTransform rect = visual.GetComponent<RectTransform>();
                 Vector2Int size = placement.Size;
@@ -94,6 +99,69 @@ namespace ExFillZone.Gameplay.Inventory
                 child.SetActive(false);
                 Destroy(child);
             }
+        }
+
+        public bool TryGetCell(Vector2 screenPosition, Camera camera, out Vector2Int cell)
+        {
+            cell = Vector2Int.zero;
+
+            if (!isActiveAndEnabled || inventory == null || cellsRoot == null) return false;
+
+            ScrollRect scroll = GetComponentInParent<ScrollRect>();
+
+            if (scroll != null && scroll.viewport != null &&
+                !RectTransformUtility.RectangleContainsScreenPoint(scroll.viewport, screenPosition, camera))
+                return false;
+
+            if (!RectTransformUtility.RectangleContainsScreenPoint(cellsRoot, screenPosition, camera))
+                return false;
+
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(cellsRoot, screenPosition, camera, out Vector2 local))
+                return false;
+
+            Rect rect = cellsRoot.rect;
+            float x = local.x - rect.xMin - padding;
+            float y = rect.yMax - local.y - padding;
+
+            if (x < 0f || y < 0f) return false;
+
+            float stepX = cellSize.x + spacing.x;
+            float stepY = cellSize.y + spacing.y;
+
+            int column = Mathf.FloorToInt(x / stepX);
+            int row = Mathf.FloorToInt(y / stepY);
+
+            if (column < 0 || row < 0 || column >= inventory.Width || row >= inventory.Height)
+                return false;
+
+            if (x - column * stepX >= cellSize.x || y - row * stepY >= cellSize.y)
+                return false;
+
+            cell = new Vector2Int(column, row);
+            return true;
+        }
+
+        public Vector2 GetItemVisualSize(ItemInstance item, bool rotated)
+        {
+            Vector2Int size = item.Definition.GridSize;
+            if (rotated) size = new Vector2Int(size.y, size.x);
+
+            return new Vector2(
+                size.x * cellSize.x + (size.x - 1) * spacing.x,
+                size.y * cellSize.y + (size.y - 1) * spacing.y
+            );
+        }
+        public Vector3 GetCellWorldPosition(Vector2Int cell)
+        {
+            Rect rect = cellsRoot.rect;
+
+            Vector3 local = new Vector3(
+                rect.xMin + padding + cell.x * (cellSize.x + spacing.x),
+                rect.yMax - padding - cell.y * (cellSize.y + spacing.y),
+                0f
+            );
+
+            return cellsRoot.TransformPoint(local);
         }
     }
 }

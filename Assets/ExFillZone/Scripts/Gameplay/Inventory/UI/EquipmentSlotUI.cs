@@ -32,7 +32,7 @@ namespace ExFillZone.Gameplay.Inventory
                 bool hasDurability = hasItem && item.Definition.MaxDurability > 0f;
 
                 durabilityText.text = hasDurability
-                    ? $"{item.Durability:0}/{item.Definition.MaxDurability:0}"
+                    ? $"{Mathf.RoundToInt(item.Durability / item.Definition.MaxDurability * 100f)}%"
                     : "";
             }
         }

@@ -115,6 +115,14 @@ namespace ExFillZone.Gameplay.Inventory
             return false;
         }
 
+        public bool CanMove(ItemInstance item, Vector2Int position, bool rotated)
+        {
+            InventoryPlacement current = placements.Find(p => ReferenceEquals(p.Item, item));
+
+            return current != null && item.IsOwnedBy(this) &&
+                   CanPlaceInternal(item, position, rotated, current);
+        }
+
         public bool TryMove(ItemInstance item, Vector2Int position, bool rotated)
         {
             InventoryPlacement current = placements.Find(p => ReferenceEquals(p.Item, item));
