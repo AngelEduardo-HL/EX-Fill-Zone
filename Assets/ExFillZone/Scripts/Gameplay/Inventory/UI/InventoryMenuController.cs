@@ -20,6 +20,9 @@ namespace ExFillZone.Gameplay.Inventory
         [SerializeField] private bool startOpen;
         [SerializeField, Min(0f)] private float fadeDuration = 0.2f;
 
+        [Header("HUD del Jugador")]
+        [SerializeField] private CanvasGroup[] gameplayHudGroups;
+
         [Header("Fondo")]
         [SerializeField, Range(0f, 0.8f)] private float backgroundDarkness = 0.3f;
         [SerializeField] private bool enableDepthOfField = true;
@@ -87,7 +90,6 @@ namespace ExFillZone.Gameplay.Inventory
 
         private void LateUpdate()
         {
-            // El cursor del inventario tiene prioridad sobre la retícula del jugador.
             if (!isOpen) return;
 
             Cursor.lockState = CursorLockMode.None;
@@ -103,6 +105,22 @@ namespace ExFillZone.Gameplay.Inventory
 
             fadeTween?.Kill();
             blurTween?.Kill();
+
+            foreach (CanvasGroup hud in gameplayHudGroups)
+            {
+                if (hud == null) continue;
+
+                hud.DOKill();
+                hud.blocksRaycasts = !open;
+                hud.interactable = !open;
+
+                float targetAlpha = open ? 0f : 1f;
+
+                if (immediate || fadeDuration <= 0f)
+                    hud.alpha = targetAlpha;
+                else
+                    hud.DOFade(targetAlpha, fadeDuration).SetEase(Ease.OutQuad).SetUpdate(true);
+            }
 
             if (open)
             {
