@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace ExFillZone.Gameplay.Inventory
 {
-    public sealed class EquipmentSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public sealed class EquipmentSlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
         [Header("Visual References")]
         [SerializeField] private Image itemIcon;
@@ -51,6 +51,12 @@ namespace ExFillZone.Gameplay.Inventory
         {
             return isActiveAndEnabled &&
                    RectTransformUtility.RectangleContainsScreenPoint((RectTransform)transform, position, camera);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.button != PointerEventData.InputButton.Left) return;
+            dragController?.OnEquipmentClicked(this);
         }
 
         public void OnBeginDrag(PointerEventData eventData)

@@ -87,9 +87,9 @@ namespace ExFillZone.Gameplay.Inventory
                 return;
 
             bool ctrl = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
-            bool shift = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
+            bool alt = Input.GetKey(KeyCode.LeftAlt);
 
-            if (!ctrl && !shift) return;
+            if (!ctrl && !alt) return;
 
             bool success = ctrl
                 ? TryQuickTransfer(visual)
@@ -98,6 +98,39 @@ namespace ExFillZone.Gameplay.Inventory
             if (success) RefreshAll();
 
             Debug.Log($"[Shortcut] {visual.Item.Definition.DisplayName}: {(success ? "Success" : "Cancelled")}", this);
+        }
+
+        public void OnEquipmentClicked(EquipmentSlotUI slot)
+        {
+            if (movingItem != null || character == null || slot?.Item == null) return;
+
+            bool ctrl = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+            if (!ctrl || !ReferenceEquals(character.Equipment.GetItem(slot.SlotType), slot.Item))
+                return;
+
+            bool success = TryUnequipTo(slot, handsView) ||
+                           TryUnequipTo(slot, rigView) ||
+                           TryUnequipTo(slot, backpackView);
+
+            InventoryGridView external = GetExternalInventory();
+
+            if (!success && external != null && external != groundView)
+                success = TryUnequipTo(slot, external);
+
+            if (!success)
+                success = TryUnequipTo(slot, groundView);
+
+            if (success) RefreshAll();
+
+            Debug.Log($"[Shortcut] Unequip {slot.SlotType}: {(success ? "Success" : "Cancelled")}", this);
+        }
+
+        private bool TryUnequipTo(EquipmentSlotUI slot, InventoryGridView destination)
+        {
+            if (destination?.Grid == null || !destination.gameObject.activeInHierarchy)
+                return false;
+
+            return character.Equipment.TryUnequipAuto(slot.SlotType, destination.Grid);
         }
 
         private InventoryGridView GetExternalInventory()
@@ -145,7 +178,7 @@ namespace ExFillZone.Gameplay.Inventory
             ItemInstance item = visual.Item;
             EquipmentLoadout equipment = character.Equipment;
 
-            // Primero buscamos un slot compatible y vacío.
+            // Primero buscamos un slot compatible y vacÃ­o.
             for (int pass = 0; pass < 2; pass++)
             {
                 foreach (EquipmentSlotType slot in equipmentPriority)
@@ -371,14 +404,24 @@ namespace ExFillZone.Gameplay.Inventory
                     {
                         if (sourceGrid != null)
                         {
-                            success = ReferenceEquals(sourceGrid.Grid, targetGrid.Grid)
-                                ? sourceGrid.Grid.TryMove(movingItem, position, rotated)
-                                : InventoryTransfer.TryTransfer(sourceGrid.Grid, targetGrid.Grid, movingItem, position, rotated);
+                            if (ReferenceEquals(sourceGrid.Grid, targetGrid.Grid))
+                            {
+                                success = sourceGrid.Grid.TryMove(movingItem, position, rotated);
+                            }
+                            else
+                            {
+                                success = InventoryTransfer.TryTransfer(sourceGrid.Grid, targetGrid.Grid, movingItem, position, rotated);
+
+                                if (!success && targetGrid == groundView)
+                                    success = InventoryTransfer.TryAutoTransfer(sourceGrid.Grid, targetGrid.Grid, movingItem);
+                            }
                         }
                         else if (sourceSlot != null)
                         {
-                            success = character.Equipment.TryUnequip(
-                                sourceSlot.SlotType, targetGrid.Grid, position, rotated);
+                            success = character.Equipment.TryUnequip(sourceSlot.SlotType, targetGrid.Grid, position, rotated);
+
+                            if (!success && targetGrid == groundView)
+                                success = character.Equipment.TryUnequipAuto(sourceSlot.SlotType, targetGrid.Grid);
                         }
                     }
                 }
@@ -404,6 +447,21 @@ namespace ExFillZone.Gameplay.Inventory
 
             if (sourceGrid != null && ReferenceEquals(sourceGrid.Grid, grid.Grid))
                 return grid.Grid.CanMove(movingItem, position, rotated);
+
+            if (grid == groundView && grid.Grid.AutoExpandRows)
+            {
+                Vector2Int size = movingItem.Definition.GridSize;
+
+                if (size.x > grid.Grid.Width && size.y > grid.Grid.Width)
+                    return false;
+
+                if (ReferenceEquals(movingItem.Contents, grid.Grid)) return false;
+
+                return sourceGrid != null
+                    ? sourceGrid.Grid.Contains(movingItem)
+                    : sourceSlot != null && character != null &&
+                      ReferenceEquals(character.Equipment.GetItem(sourceSlot.SlotType), movingItem);
+            }
 
             if (ReferenceEquals(movingItem.Contents, grid.Grid) ||
                 !grid.Grid.CanPlace(movingItem, position, rotated))

@@ -167,6 +167,15 @@ namespace ExFillZone.Gameplay.Inventory
                 }
             }
 
+            if (destination.AutoExpandRows)
+            {
+                Vector2Int size = item.Definition.GridSize;
+                bool rotated = size.x > destination.Width;
+
+                if (!rotated || size.y <= destination.Width)
+                    return TryUnequip(slot, destination, new Vector2Int(0, destination.Height), rotated);
+            }
+
             return false;
         }
         public bool CanEquipOrSwap(InventoryGrid source, ItemInstance incoming, EquipmentSlotType slot)
@@ -268,6 +277,21 @@ namespace ExFillZone.Gameplay.Inventory
                         rotated = testRotation;
                         return true;
                     }
+                }
+            }
+
+            if (source.AutoExpandRows)
+            {
+                Vector2Int size = old.Definition.GridSize;
+                bool appendRotated = size.x > source.Width;
+                Vector2Int appendPosition = new Vector2Int(0, source.Height);
+
+                if ((!appendRotated || size.y <= source.Width) &&
+                    source.CanPlaceReplacing(old, incoming, appendPosition, appendRotated))
+                {
+                    position = appendPosition;
+                    rotated = appendRotated;
+                    return true;
                 }
             }
 

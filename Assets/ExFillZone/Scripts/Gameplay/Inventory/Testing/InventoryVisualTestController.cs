@@ -40,7 +40,7 @@ namespace ExFillZone.Gameplay.Inventory
             character = GetComponent<CharacterInventory>();
             dragController.Bind(character);
             equipmentPanel.ConfigureDrag(dragController);
-            ground = new InventoryGrid(7, 13);
+            ground = new InventoryGrid(7, 13, true, true);
 
             // Objetos independientes para Hands y Ground.
             bool handsReady = character.Pockets.TryAutoPlace(new ItemInstance(rifleDefinition)) &&
