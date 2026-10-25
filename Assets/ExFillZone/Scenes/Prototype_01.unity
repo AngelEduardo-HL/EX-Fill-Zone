@@ -22519,7 +22519,7 @@ MonoBehaviour:
   playerPanels: {fileID: 845555807}
   equipmentPanel: {fileID: 2041872656}
   dragLayer: {fileID: 1742019395}
-  itemPrefab: {fileID: 0}
+  itemPrefab: {fileID: 5629982929974686008, guid: 677390c8b4087be4089b421d78998c15, type: 3}
 --- !u!1001 &1745159404
 PrefabInstance:
   m_ObjectHideFlags: 0
