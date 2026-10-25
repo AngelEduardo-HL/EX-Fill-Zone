@@ -71,5 +71,28 @@ namespace ExFillZone.Gameplay.Inventory
                                        ratio < 1f ? "HEAVY" : "OVERLOADED";
             }
         }
+        public void ConfigureDrag(InventoryDragController controller)
+        {
+            helmetSlot?.ConfigureDrag(controller, EquipmentSlotType.Helmet);
+            bodyArmorSlot?.ConfigureDrag(controller, EquipmentSlotType.BodyArmor);
+            tacticalRigSlot?.ConfigureDrag(controller, EquipmentSlotType.TacticalRig);
+            backpackSlot?.ConfigureDrag(controller, EquipmentSlotType.Backpack);
+            primaryWeaponSlot?.ConfigureDrag(controller, EquipmentSlotType.PrimaryWeapon);
+            secondaryWeaponSlot?.ConfigureDrag(controller, EquipmentSlotType.SecondaryWeapon);
+        }
+
+        public EquipmentSlotUI GetSlotAt(Vector2 position, Camera camera)
+        {
+            if (!isActiveAndEnabled) return null;
+
+            if (helmetSlot != null && helmetSlot.ContainsScreenPoint(position, camera)) return helmetSlot;
+            if (bodyArmorSlot != null && bodyArmorSlot.ContainsScreenPoint(position, camera)) return bodyArmorSlot;
+            if (tacticalRigSlot != null && tacticalRigSlot.ContainsScreenPoint(position, camera)) return tacticalRigSlot;
+            if (backpackSlot != null && backpackSlot.ContainsScreenPoint(position, camera)) return backpackSlot;
+            if (primaryWeaponSlot != null && primaryWeaponSlot.ContainsScreenPoint(position, camera)) return primaryWeaponSlot;
+            if (secondaryWeaponSlot != null && secondaryWeaponSlot.ContainsScreenPoint(position, camera)) return secondaryWeaponSlot;
+
+            return null;
+        }
     }
 }

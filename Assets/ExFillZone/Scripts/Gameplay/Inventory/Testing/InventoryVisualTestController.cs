@@ -9,6 +9,7 @@ namespace ExFillZone.Gameplay.Inventory
         [SerializeField] private PlayerInventoryPanelsUI playerPanels;
         [SerializeField] private PlayerEquipmentPanelUI equipmentPanel;
         [SerializeField] private InventoryGridView groundView;
+        [SerializeField] private InventoryDragController dragController;
 
         [Header("Test Items")]
         [SerializeField] private ItemDefinition rifleDefinition;
@@ -28,7 +29,7 @@ namespace ExFillZone.Gameplay.Inventory
         private void Start()
         {
             if (playerPanels == null || equipmentPanel == null || groundView == null ||
-                rifleDefinition == null || medkitDefinition == null ||
+                dragController == null || rifleDefinition == null || medkitDefinition == null ||
                 rigDefinition == null || backpackDefinition == null ||
                 helmetDefinition == null || bodyArmorDefinition == null)
             {
@@ -37,6 +38,8 @@ namespace ExFillZone.Gameplay.Inventory
             }
 
             character = GetComponent<CharacterInventory>();
+            dragController.Bind(character);
+            equipmentPanel.ConfigureDrag(dragController);
             ground = new InventoryGrid(7, 13);
 
             // Objetos independientes para Hands y Ground.

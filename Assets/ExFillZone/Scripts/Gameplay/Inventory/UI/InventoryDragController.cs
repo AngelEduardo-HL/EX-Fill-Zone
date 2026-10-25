@@ -12,23 +12,42 @@ namespace ExFillZone.Gameplay.Inventory
         [SerializeField] private InventoryGridView backpackView;
         [SerializeField] private InventoryGridView groundView;
 
-        [Header("Other UI")]
+        [Header("Equipment")]
         [SerializeField] private PlayerInventoryPanelsUI playerPanels;
         [SerializeField] private PlayerEquipmentPanelUI equipmentPanel;
-        [SerializeField] private RectTransform dragLayer;
 
-        private InventoryItemUI moving;
-        private InventoryGridView source;
-        private RectTransform movingRect;
-        private Image background;
-        private Vector2Int grabOffset;
-        private bool rotated;
+
+        [Header("Drag Preview")]
+        [SerializeField] private RectTransform dragLayer;
+        [SerializeField] private InventoryItemUI itemPrefab;
+
+
+        private CharacterInventory character;
+
+        private InventoryItemUI sourceItemUI;
+        private InventoryGridView sourceGrid;
+        private EquipmentSlotUI sourceSlot;
+
+        private ItemInstance movingItem;
+        private InventoryItemUI preview;
+        private RectTransform previewRect;
+        private Image previewBackground;
+
+        private CanvasGroup sourceCanvasGroup;
+        private float originalAlpha;
+
         private Vector2 pointerPosition;
         private Camera pointerCamera;
+        private bool rotated;
+
+        public void Bind(CharacterInventory inventory)
+        {
+            character = inventory;
+        }
 
         private void Update()
         {
-            if (moving == null || !Input.GetKeyDown(KeyCode.R)) return;
+            if (movingItem == null || !Input.GetKeyDown(KeyCode.R)) return;
 
             rotated = !rotated;
             RefreshPreview();
@@ -36,55 +55,91 @@ namespace ExFillZone.Gameplay.Inventory
 
         public void BeginDrag(InventoryItemUI visual, InventoryGridView origin, PointerEventData eventData)
         {
-            if (moving != null || visual?.Item == null || origin?.Grid == null || dragLayer == null)
-                return;
+            if (visual?.Item == null || origin?.Grid == null || movingItem != null) return;
 
             InventoryPlacement placement = null;
 
             foreach (InventoryPlacement current in origin.Grid.Placements)
             {
                 if (!ReferenceEquals(current.Item, visual.Item)) continue;
-
                 placement = current;
                 break;
             }
 
-            if (placement == null) return;
+            if (placement == null || !CreatePreview(visual.Item, visual.gameObject, eventData)) return;
 
-            moving = visual;
-            source = origin;
+            sourceItemUI = visual;
+            sourceGrid = origin;
+            sourceSlot = null;
             rotated = placement.Rotated;
+
+            RefreshPreview();
+        }
+
+        public void BeginDragFromSlot(EquipmentSlotUI slot, PointerEventData eventData)
+        {
+            if (slot?.Item == null || character == null || movingItem != null) return;
+            if (!ReferenceEquals(character.Equipment.GetItem(slot.SlotType), slot.Item)) return;
+            if (!CreatePreview(slot.Item, slot.gameObject, eventData)) return;
+
+            sourceItemUI = null;
+            sourceGrid = null;
+            sourceSlot = slot;
+            rotated = false;
+
+            RefreshPreview();
+        }
+
+        private bool CreatePreview(ItemInstance item, GameObject sourceObject, PointerEventData eventData)
+        {
+            if (item?.Definition == null || dragLayer == null || itemPrefab == null) return false;
+
+            movingItem = item;
             pointerPosition = eventData.position;
             pointerCamera = eventData.pressEventCamera;
 
-            grabOffset = Vector2Int.zero;
+            preview = Instantiate(itemPrefab, dragLayer, false);
+            preview.Setup(item, null, this);
 
-            if (origin.TryGetCell(eventData.position, pointerCamera, out Vector2Int clicked))
-                grabOffset = clicked - placement.Position;
+            previewRect = preview.GetComponent<RectTransform>();
+            previewRect.anchorMin = new Vector2(0.5f, 0.5f);
+            previewRect.anchorMax = new Vector2(0.5f, 0.5f);
+            previewRect.pivot = new Vector2(0.5f, 0.5f);
+            previewRect.localScale = Vector3.one;
+            previewRect.SetAsLastSibling();
 
-            movingRect = visual.GetComponent<RectTransform>();
-            movingRect.SetParent(dragLayer, false);
-            movingRect.SetAsLastSibling();
-            movingRect.anchorMin = new Vector2(0.5f, 0.5f);
-            movingRect.anchorMax = new Vector2(0.5f, 0.5f);
-            movingRect.pivot = new Vector2(0f, 1f);
-            movingRect.localScale = Vector3.one;
+            CanvasGroup previewGroup = preview.GetComponent<CanvasGroup>();
+            if (previewGroup == null) previewGroup = preview.gameObject.AddComponent<CanvasGroup>();
 
-            CanvasGroup group = visual.GetComponent<CanvasGroup>();
-            if (group == null) group = visual.gameObject.AddComponent<CanvasGroup>();
+            previewGroup.blocksRaycasts = false;
+            previewGroup.interactable = false;
+            previewGroup.alpha = 0.85f;
 
-            group.blocksRaycasts = false;
-            group.interactable = false;
-            group.alpha = 0.85f;
+            previewBackground = preview.GetComponent<Image>();
 
-            background = visual.GetComponent<Image>();
-            RefreshPreview();
+            sourceCanvasGroup = sourceObject.GetComponent<CanvasGroup>();
+            if (sourceCanvasGroup == null) sourceCanvasGroup = sourceObject.AddComponent<CanvasGroup>();
+
+            originalAlpha = sourceCanvasGroup.alpha;
+            sourceCanvasGroup.alpha = 0.3f;
+
+            return true;
         }
 
         public void UpdateDrag(InventoryItemUI visual, PointerEventData eventData)
         {
-            if (!ReferenceEquals(moving, visual)) return;
+            if (!ReferenceEquals(sourceItemUI, visual)) return;
+            UpdatePointer(eventData);
+        }
 
+        public void UpdateDragFromSlot(EquipmentSlotUI slot, PointerEventData eventData)
+        {
+            if (!ReferenceEquals(sourceSlot, slot)) return;
+            UpdatePointer(eventData);
+        }
+
+        private void UpdatePointer(PointerEventData eventData)
+        {
             pointerPosition = eventData.position;
             pointerCamera = eventData.pressEventCamera;
             RefreshPreview();
@@ -92,100 +147,166 @@ namespace ExFillZone.Gameplay.Inventory
 
         public void EndDrag(InventoryItemUI visual, PointerEventData eventData)
         {
-            if (!ReferenceEquals(moving, visual)) return;
+            if (!ReferenceEquals(sourceItemUI, visual)) return;
+            CompleteDrag(eventData);
+        }
 
-            pointerPosition = eventData.position;
-            pointerCamera = eventData.pressEventCamera;
+        public void EndDragFromSlot(EquipmentSlotUI slot, PointerEventData eventData)
+        {
+            if (!ReferenceEquals(sourceSlot, slot)) return;
+            CompleteDrag(eventData);
+        }
+
+        private void CompleteDrag(PointerEventData eventData)
+        {
+            UpdatePointer(eventData);
 
             bool success = false;
-            InventoryGridView target = GetHoveredGrid(out Vector2Int hoveredCell);
+            EquipmentSlotUI targetSlot = equipmentPanel != null
+                ? equipmentPanel.GetSlotAt(pointerPosition, pointerCamera)
+                : null;
 
-            if (target != null)
+            if (targetSlot != null)
             {
-                Vector2Int position = GetPlacementPosition(hoveredCell);
+                if (CanDropOnSlot(targetSlot))
+                    success = character.Equipment.TryEquip(sourceGrid.Grid, movingItem, targetSlot.SlotType);
+            }
+            else
+            {
+                InventoryGridView targetGrid = GetHoveredGrid(out Vector2Int position);
 
-                success = ReferenceEquals(source.Grid, target.Grid)
-                    ? source.Grid.TryMove(moving.Item, position, rotated)
-                    : InventoryTransfer.TryTransfer(source.Grid, target.Grid, moving.Item, position, rotated);
+                if (targetGrid != null && CanDropOnGrid(targetGrid, position))
+                {
+                    if (sourceGrid != null)
+                    {
+                        success = ReferenceEquals(sourceGrid.Grid, targetGrid.Grid)
+                            ? sourceGrid.Grid.TryMove(movingItem, position, rotated)
+                            : InventoryTransfer.TryTransfer(sourceGrid.Grid, targetGrid.Grid, movingItem, position, rotated);
+                    }
+                    else if (sourceSlot != null)
+                    {
+                        success = character.Equipment.TryUnequip(sourceSlot.SlotType, targetGrid.Grid, position, rotated);
+                    }
+                }
             }
 
-            string itemName = moving.Item.Definition.DisplayName;
+            FinishDrag(success);
+        }
 
-            Destroy(moving.gameObject);
-            moving = null;
-            movingRect = null;
-            background = null;
-            source = null;
+        private bool CanDropOnSlot(EquipmentSlotUI slot)
+        {
+            if (sourceGrid == null || character == null || movingItem == null || slot.Item != null)
+                return false;
+
+            return sourceGrid.Grid.Contains(movingItem) &&
+                   movingItem.Quantity == 1 &&
+                   character.Equipment.IsValidForSlot(movingItem.Definition, slot.SlotType);
+        }
+
+        private bool CanDropOnGrid(InventoryGridView grid, Vector2Int position)
+        {
+            if (grid?.Grid == null || movingItem == null) return false;
+
+            if (sourceGrid != null && ReferenceEquals(sourceGrid.Grid, grid.Grid))
+                return grid.Grid.CanMove(movingItem, position, rotated);
+
+            if (ReferenceEquals(movingItem.Contents, grid.Grid) ||
+                !grid.Grid.CanPlace(movingItem, position, rotated))
+                return false;
+
+            if (sourceGrid != null)
+                return sourceGrid.Grid.Contains(movingItem);
+
+            return sourceSlot != null && character != null &&
+                   ReferenceEquals(character.Equipment.GetItem(sourceSlot.SlotType), movingItem);
+        }
+
+        private void RefreshPreview()
+        {
+            if (movingItem == null || previewRect == null) return;
+
+            EquipmentSlotUI targetSlot = equipmentPanel != null
+                ? equipmentPanel.GetSlotAt(pointerPosition, pointerCamera)
+                : null;
+
+            bool valid;
+
+            if (targetSlot != null)
+            {
+                previewRect.sizeDelta = ((RectTransform)targetSlot.transform).rect.size;
+                valid = CanDropOnSlot(targetSlot);
+            }
+            else
+            {
+                InventoryGridView targetGrid = GetHoveredGrid(out Vector2Int position);
+
+                if (targetGrid != null)
+                {
+                    previewRect.sizeDelta = targetGrid.GetItemVisualSize(movingItem, rotated);
+                    valid = CanDropOnGrid(targetGrid, position);
+                }
+                else
+                {
+                    previewRect.sizeDelta = sourceGrid != null
+                        ? sourceGrid.GetItemVisualSize(movingItem, rotated)
+                        : ((RectTransform)sourceSlot.transform).rect.size;
+
+                    valid = false;
+                }
+            }
+
+            if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
+                dragLayer, pointerPosition, pointerCamera, out Vector3 worldPosition))
+            {
+                previewRect.position = worldPosition;
+            }
+
+            if (previewBackground != null)
+            {
+                previewBackground.color = valid
+                    ? new Color(0.2f, 0.8f, 0.4f, 0.9f)
+                    : new Color(0.9f, 0.25f, 0.25f, 0.9f);
+            }
+        }
+
+        private InventoryGridView GetHoveredGrid(out Vector2Int position)
+        {
+            if (movingItem != null)
+            {
+                if (handsView != null && handsView.TryGetDropPosition(pointerPosition, pointerCamera, movingItem, rotated, out position)) return handsView;
+                if (rigView != null && rigView.TryGetDropPosition(pointerPosition, pointerCamera, movingItem, rotated, out position)) return rigView;
+                if (backpackView != null && backpackView.TryGetDropPosition(pointerPosition, pointerCamera, movingItem, rotated, out position)) return backpackView;
+                if (groundView != null && groundView.TryGetDropPosition(pointerPosition, pointerCamera, movingItem, rotated, out position)) return groundView;
+            }
+
+            position = Vector2Int.zero;
+            return null;
+        }
+
+        private void FinishDrag(bool success)
+        {
+            string itemName = movingItem?.Definition?.DisplayName ?? "Item";
+
+            if (sourceCanvasGroup != null)
+                sourceCanvasGroup.alpha = originalAlpha;
+
+            if (preview != null)
+                Destroy(preview.gameObject);
+
+            movingItem = null;
+            sourceItemUI = null;
+            sourceGrid = null;
+            sourceSlot = null;
+            preview = null;
+            previewRect = null;
+            previewBackground = null;
+            sourceCanvasGroup = null;
 
             playerPanels?.Refresh();
             groundView?.Refresh();
             equipmentPanel?.Refresh();
 
             Debug.Log($"[Drag] {itemName}: {(success ? "Moved" : "Cancelled")}", this);
-        }
-
-        private void RefreshPreview()
-        {
-            if (moving == null || movingRect == null) return;
-
-            InventoryGridView target = GetHoveredGrid(out Vector2Int hoveredCell);
-
-            if (target == null)
-            {
-                movingRect.sizeDelta = source.GetItemVisualSize(moving.Item, rotated);
-
-                if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
-                    dragLayer, pointerPosition, pointerCamera, out Vector3 world))
-                    movingRect.position = world;
-
-                SetPreviewColor(false);
-                return;
-            }
-
-            Vector2Int position = GetPlacementPosition(hoveredCell);
-
-            movingRect.sizeDelta = target.GetItemVisualSize(moving.Item, rotated);
-            movingRect.position = target.GetCellWorldPosition(position);
-
-            bool valid = ReferenceEquals(source.Grid, target.Grid)
-                ? source.Grid.CanMove(moving.Item, position, rotated)
-                : target.Grid.CanPlace(moving.Item, position, rotated) &&
-                  !ReferenceEquals(moving.Item.Contents, target.Grid);
-
-            SetPreviewColor(valid);
-        }
-
-        private Vector2Int GetPlacementPosition(Vector2Int hoveredCell)
-        {
-            Vector2Int size = moving.Item.Definition.GridSize;
-            if (rotated) size = new Vector2Int(size.y, size.x);
-
-            Vector2Int offset = new Vector2Int(
-                Mathf.Clamp(grabOffset.x, 0, size.x - 1),
-                Mathf.Clamp(grabOffset.y, 0, size.y - 1)
-            );
-
-            return hoveredCell - offset;
-        }
-
-        private InventoryGridView GetHoveredGrid(out Vector2Int cell)
-        {
-            if (handsView != null && handsView.TryGetCell(pointerPosition, pointerCamera, out cell)) return handsView;
-            if (rigView != null && rigView.TryGetCell(pointerPosition, pointerCamera, out cell)) return rigView;
-            if (backpackView != null && backpackView.TryGetCell(pointerPosition, pointerCamera, out cell)) return backpackView;
-            if (groundView != null && groundView.TryGetCell(pointerPosition, pointerCamera, out cell)) return groundView;
-
-            cell = Vector2Int.zero;
-            return null;
-        }
-
-        private void SetPreviewColor(bool valid)
-        {
-            if (background == null) return;
-
-            background.color = valid
-                ? new Color(0.2f, 0.8f, 0.4f, 0.9f)
-                : new Color(0.9f, 0.25f, 0.25f, 0.9f);
         }
     }
 }

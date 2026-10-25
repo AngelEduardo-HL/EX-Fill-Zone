@@ -58,8 +58,7 @@ namespace ExFillZone.Gameplay.Inventory
             cellsLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
             cellsLayout.constraintCount = inventory.Width;
 
-            layoutElement.preferredHeight = inventory.Height * cellSize.y +
-                                            (inventory.Height - 1) * spacing.y + padding * 2;
+            layoutElement.preferredHeight = inventory.Height * cellSize.y + (inventory.Height - 1) * spacing.y + padding * 2;
 
             for (int i = 0; i < inventory.Width * inventory.Height; i++)
                 Instantiate(cellPrefab, cellsRoot, false);
@@ -77,15 +76,9 @@ namespace ExFillZone.Gameplay.Inventory
                 rect.anchorMax = new Vector2(0f, 1f);
                 rect.pivot = new Vector2(0f, 1f);
 
-                rect.sizeDelta = new Vector2(
-                    size.x * cellSize.x + (size.x - 1) * spacing.x,
-                    size.y * cellSize.y + (size.y - 1) * spacing.y
-                );
+                rect.sizeDelta = new Vector2(size.x * cellSize.x + (size.x - 1) * spacing.x, size.y * cellSize.y + (size.y - 1) * spacing.y);
 
-                rect.anchoredPosition = new Vector2(
-                    padding + position.x * (cellSize.x + spacing.x),
-                    -padding - position.y * (cellSize.y + spacing.y)
-                );
+                rect.anchoredPosition = new Vector2(padding + position.x * (cellSize.x + spacing.x), -padding - position.y * (cellSize.y + spacing.y));
             }
 
             LayoutRebuilder.MarkLayoutForRebuild((RectTransform)transform);
@@ -155,13 +148,41 @@ namespace ExFillZone.Gameplay.Inventory
         {
             Rect rect = cellsRoot.rect;
 
-            Vector3 local = new Vector3(
-                rect.xMin + padding + cell.x * (cellSize.x + spacing.x),
-                rect.yMax - padding - cell.y * (cellSize.y + spacing.y),
-                0f
-            );
+            Vector3 local = new Vector3(rect.xMin + padding + cell.x * (cellSize.x + spacing.x), rect.yMax - padding - cell.y * (cellSize.y + spacing.y), 0f);
 
             return cellsRoot.TransformPoint(local);
+        }
+        public bool TryGetDropPosition(Vector2 screenPosition, Camera camera, ItemInstance item, bool rotated, out Vector2Int position)
+        {
+            position = Vector2Int.zero;
+
+            if (!isActiveAndEnabled || inventory == null || cellsRoot == null || item?.Definition == null)
+                return false;
+
+            ScrollRect scroll = GetComponentInParent<ScrollRect>();
+
+            if (scroll != null && scroll.viewport != null &&
+                !RectTransformUtility.RectangleContainsScreenPoint(scroll.viewport, screenPosition, camera))
+                return false;
+
+            if (!RectTransformUtility.RectangleContainsScreenPoint(cellsRoot, screenPosition, camera))
+                return false;
+
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(cellsRoot, screenPosition, camera, out Vector2 local))
+                return false;
+
+            Rect rect = cellsRoot.rect;
+            Vector2 itemSize = GetItemVisualSize(item, rotated);
+
+            float x = local.x - rect.xMin - padding - itemSize.x * 0.5f;
+            float y = rect.yMax - local.y - padding - itemSize.y * 0.5f;
+
+            position = new Vector2Int(
+                Mathf.RoundToInt(x / (cellSize.x + spacing.x)),
+                Mathf.RoundToInt(y / (cellSize.y + spacing.y))
+            );
+
+            return true;
         }
     }
 }

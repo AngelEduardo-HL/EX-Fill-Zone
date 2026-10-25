@@ -10217,6 +10217,7 @@ GameObject:
   - component: {fileID: 845555805}
   - component: {fileID: 845555807}
   - component: {fileID: 845555804}
+  - component: {fileID: 845555808}
   m_Layer: 0
   m_Name: InventoryVisualTest
   m_TagString: Untagged
@@ -10239,6 +10240,7 @@ MonoBehaviour:
   playerPanels: {fileID: 845555807}
   equipmentPanel: {fileID: 2041872656}
   groundView: {fileID: 1488941164}
+  dragController: {fileID: 845555808}
   rifleDefinition: {fileID: 11400000, guid: 6631b1caa14d5854d801ab4ec5b3accd, type: 2}
   medkitDefinition: {fileID: 11400000, guid: aece8372e5a69884187e887a36d96f91, type: 2}
   rigDefinition: {fileID: 11400000, guid: b2499dcfd4427fb4fbcaf57996a457be, type: 2}
@@ -10315,6 +10317,26 @@ MonoBehaviour:
   rigView: {fileID: 260767831}
   backpackView: {fileID: 860088069}
   contentPlayer: {fileID: 1946726042}
+--- !u!114 &845555808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 845555803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f14096f69b2e2d0458ba0eebcbd9c68f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.InventoryDragController
+  handsView: {fileID: 332315446}
+  rigView: {fileID: 260767831}
+  backpackView: {fileID: 860088069}
+  groundView: {fileID: 1488941164}
+  playerPanels: {fileID: 845555807}
+  equipmentPanel: {fileID: 2041872656}
+  dragLayer: {fileID: 1742019395}
+  itemPrefab: {fileID: 5629982929974686008, guid: 677390c8b4087be4089b421d78998c15, type: 3}
 --- !u!1 &854201698
 GameObject:
   m_ObjectHideFlags: 0
@@ -22497,6 +22519,7 @@ MonoBehaviour:
   playerPanels: {fileID: 845555807}
   equipmentPanel: {fileID: 2041872656}
   dragLayer: {fileID: 1742019395}
+  itemPrefab: {fileID: 0}
 --- !u!1001 &1745159404
 PrefabInstance:
   m_ObjectHideFlags: 0
