@@ -86,12 +86,21 @@ namespace ExFillZone.Gameplay.Player
             if (movementReference == null)
             {
                 Debug.LogError(
-                    "PlayerMotor necesita una referencia de c·mara.",
+                    "PlayerMotor necesita una referencia de c√°mara.",
                     this
                 );
 
                 enabled = false;
             }
+        }
+
+        public void StopImmediately()
+        {
+            currentMoveDirection = Vector3.zero;
+            currentMovementSpeed = 0f;
+            verticalVelocity = 0f;
+            MovementDirection = Vector3.zero;
+            IsSprinting = false;
         }
 
         private void Update()

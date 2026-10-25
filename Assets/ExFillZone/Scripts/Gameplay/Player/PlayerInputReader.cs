@@ -1,3 +1,4 @@
+using ExFillZone.Gameplay.Inventory;
 using UnityEngine;
 
 namespace ExFillZone.Gameplay.Player
@@ -8,6 +9,8 @@ namespace ExFillZone.Gameplay.Player
         {
             get
             {
+                if (InventoryMenuController.IsOpen) return Vector2.zero;
+
                 float horizontal = Input.GetAxisRaw("Horizontal");
                 float vertical = Input.GetAxisRaw("Vertical");
 
@@ -18,6 +21,8 @@ namespace ExFillZone.Gameplay.Player
         {
             get
             {
+                if (InventoryMenuController.IsOpen) return 0f;
+
                 float input = 0f;
 
                 if (Input.GetKey(KeyCode.Q))
@@ -36,10 +41,10 @@ namespace ExFillZone.Gameplay.Player
 
         public Vector3 MouseScreenPosition => Input.mousePosition;
 
-        public bool FirePressed => Input.GetMouseButtonDown(0);
-        public bool AimHeld => Input.GetMouseButton(1);
-        public bool SprintHeld => Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-        public bool InteractPressed => Input.GetKeyDown(KeyCode.F);
+        public bool FirePressed => !InventoryMenuController.IsOpen && Input.GetMouseButtonDown(0);
+        public bool AimHeld => !InventoryMenuController.IsOpen && Input.GetMouseButton(1);
+        public bool SprintHeld => !InventoryMenuController.IsOpen && (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift));
+        public bool InteractPressed => !InventoryMenuController.IsOpen && Input.GetKeyDown(KeyCode.F);
 
     }
 }
