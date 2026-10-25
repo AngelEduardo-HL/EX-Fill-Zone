@@ -84,6 +84,12 @@ namespace ExFillZone.Gameplay.Inventory
 
             return true;
         }
+        public bool CanPlaceReplacing(ItemInstance item, ItemInstance ignored, Vector2Int position, bool rotated = false)
+        {
+            InventoryPlacement placement = placements.Find(p => ReferenceEquals(p.Item, ignored));
+
+            return placement != null && CanPlaceInternal(item, position, rotated, placement);
+        }
 
         public bool TryPlace(ItemInstance item, Vector2Int position, bool rotated = false)
         {

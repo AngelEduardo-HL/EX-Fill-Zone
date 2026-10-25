@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 namespace ExFillZone.Gameplay.Inventory
 {
-    public sealed class InventoryItemUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public sealed class InventoryItemUI : MonoBehaviour,
+        IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
         [SerializeField] private Image icon;
         [SerializeField] private TMP_Text itemName;
@@ -15,6 +16,7 @@ namespace ExFillZone.Gameplay.Inventory
         private InventoryDragController dragController;
 
         public ItemInstance Item { get; private set; }
+        public InventoryGridView SourceGrid => source;
 
         public void Setup(ItemInstance item, InventoryGridView grid, InventoryDragController controller)
         {
@@ -37,9 +39,17 @@ namespace ExFillZone.Gameplay.Inventory
                 quantityText.text = item.Quantity > 1 ? item.Quantity.ToString() : "";
         }
 
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.button != PointerEventData.InputButton.Left) return;
+
+            dragController?.OnItemClicked(this);
+        }
+
         public void OnBeginDrag(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left) return;
+
             dragController?.BeginDrag(this, source, eventData);
         }
 
