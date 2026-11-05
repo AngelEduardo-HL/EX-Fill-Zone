@@ -79,6 +79,7 @@ namespace ExFillZone.Gameplay.Inventory
                 rect.sizeDelta = new Vector2(size.x * cellSize.x + (size.x - 1) * spacing.x, size.y * cellSize.y + (size.y - 1) * spacing.y);
 
                 rect.anchoredPosition = new Vector2(padding + position.x * (cellSize.x + spacing.x), -padding - position.y * (cellSize.y + spacing.y));
+                visual.SetIconRotation(placement.Rotated);
             }
 
             LayoutRebuilder.MarkLayoutForRebuild((RectTransform)transform);

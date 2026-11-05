@@ -530,6 +530,8 @@ namespace ExFillZone.Gameplay.Inventory
                 }
             }
 
+            preview?.SetIconRotation(rotated);
+
             if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
                 dragLayer, pointerPosition, pointerCamera, out Vector3 worldPosition))
             {

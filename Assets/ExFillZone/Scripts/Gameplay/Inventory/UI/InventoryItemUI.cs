@@ -39,6 +39,33 @@ namespace ExFillZone.Gameplay.Inventory
                 quantityText.text = item.Quantity > 1 ? item.Quantity.ToString() : "";
         }
 
+        public void SetIconRotation(bool rotated)
+        {
+            if (icon == null) return;
+
+            RectTransform iconRect = icon.rectTransform;
+            RectTransform itemRect = (RectTransform)transform;
+
+            float padding = 4f;
+            float topMargin = 18f;
+            float bottomMargin = 4f;
+
+            float width = Mathf.Max(1f, itemRect.rect.width - padding * 2f);
+            float height = Mathf.Max(1f, itemRect.rect.height - topMargin - bottomMargin);
+
+            iconRect.anchorMin = new Vector2(0.5f, 0.5f);
+            iconRect.anchorMax = new Vector2(0.5f, 0.5f);
+            iconRect.pivot = new Vector2(0.5f, 0.5f);
+
+            iconRect.anchoredPosition = new Vector2(0f, (bottomMargin - topMargin) * 0.5f);
+
+            iconRect.sizeDelta = rotated
+                ? new Vector2(height, width)
+                : new Vector2(width, height);
+
+            iconRect.localRotation = Quaternion.Euler(0f, 0f, rotated ? -90f : 0f);
+        }
+
         public void OnPointerClick(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left) return;

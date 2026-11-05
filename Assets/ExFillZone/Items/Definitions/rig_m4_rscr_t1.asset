@@ -15,8 +15,9 @@ MonoBehaviour:
   itemId: rig_m4_rscr_t1
   displayName: T1 M4 RSCR-1
   category: 7
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
-  gridSize: {x: 3, y: 2}
+  description: "PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisi\xF3n
+    y balance."
+  gridSize: {x: 2, y: 3}
   weight: 1
   value: 1500
   maxStack: 1
