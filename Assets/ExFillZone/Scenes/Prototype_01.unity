@@ -4195,10 +4195,10 @@ RectTransform:
   - {fileID: 1006354183}
   m_Father: {fileID: 1363515480}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 25, y: -150}
-  m_SizeDelta: {x: 50, y: 50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &332270722
 MonoBehaviour:
@@ -5280,7 +5280,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &388451633
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6919,95 +6919,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 492884848}
   m_CullTransparentMesh: 1
---- !u!1 &508476057
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 508476060}
-  - component: {fileID: 508476059}
-  - component: {fileID: 508476058}
-  m_Layer: 0
-  m_Name: InventoryEquipmetTest
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &508476058
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508476057}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddc952a5c7a420c4bb73801f8965db98, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.EquipmentTestRunner
-  backpackDefinition: {fileID: 11400000, guid: 84d72df00d3e7fc4fbbf98d0df069849, type: 2}
-  rigDefinition: {fileID: 11400000, guid: 21eef3dc851430c4798b19972eb857fe, type: 2}
-  helmetDefinition: {fileID: 11400000, guid: 8690e45321a66a644bf5f442a1702a70, type: 2}
-  rifleDefinition: {fileID: 11400000, guid: 6631b1caa14d5854d801ab4ec5b3accd, type: 2}
-  medkitDefinition: {fileID: 11400000, guid: aece8372e5a69884187e887a36d96f91, type: 2}
---- !u!114 &508476059
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508476057}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19432e2f4d23b844b9810615cba41234, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.CharacterInventory
-  pocketColumns: 8
-  pocketRows: 6
-  equipment:
-    rid: 3698690386232082528
-  pockets:
-    rid: -2
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3698690386232082528
-      type: {class: EquipmentLoadout, ns: ExFillZone.Gameplay.Inventory, asm: Assembly-CSharp}
-      data:
-        helmet:
-          rid: -2
-        bodyArmor:
-          rid: -2
-        tacticalRig:
-          rid: -2
-        backpack:
-          rid: -2
-        primaryWeapon:
-          rid: -2
-        secondaryWeapon:
-          rid: -2
-        maxArmorMitigation: 0.8
---- !u!4 &508476060
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 508476057}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.49031, y: 0, z: 85.07209}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &508483113
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8980,10 +8891,10 @@ RectTransform:
   - {fileID: 1675207819}
   m_Father: {fileID: 1021168253}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -300.4}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &711800290
 MonoBehaviour:
@@ -9729,7 +9640,7 @@ RectTransform:
   m_Father: {fileID: 1443839897}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -0.0000076293945, y: 0}
   m_SizeDelta: {x: -0.0000038147, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10541,11 +10452,11 @@ MonoBehaviour:
   groundView: {fileID: 1488941164}
   dragController: {fileID: 845555808}
   rifleDefinition: {fileID: 11400000, guid: 6631b1caa14d5854d801ab4ec5b3accd, type: 2}
-  medkitDefinition: {fileID: 11400000, guid: aece8372e5a69884187e887a36d96f91, type: 2}
-  rigDefinition: {fileID: 11400000, guid: b2499dcfd4427fb4fbcaf57996a457be, type: 2}
-  backpackDefinition: {fileID: 11400000, guid: a96b682f3b145a14e9a8cd36e2434b4a, type: 2}
-  helmetDefinition: {fileID: 11400000, guid: a0403135f61012d4cbd6ecb881ccfc59, type: 2}
-  bodyArmorDefinition: {fileID: 11400000, guid: 57b11413e7dc15140aeb6f78e91a72c1, type: 2}
+  medkitDefinition: {fileID: 11400000, guid: ed14552b57fb524782e640bf50a5b226, type: 2}
+  rigDefinition: {fileID: 11400000, guid: 1556da97765b53b697e2b4ee1df5af47, type: 2}
+  backpackDefinition: {fileID: 11400000, guid: de9b5608853d58508022e69608bd3bfc, type: 2}
+  helmetDefinition: {fileID: 11400000, guid: d96f06d15efb5cb9a7a42eb8984e4e2d, type: 2}
+  bodyArmorDefinition: {fileID: 11400000, guid: 503e0c72e4c159019ec404730b08f7df, type: 2}
 --- !u!114 &845555805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11369,10 +11280,10 @@ RectTransform:
   - {fileID: 1585490952}
   m_Father: {fileID: 1021168253}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -425.6}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &899179981
 MonoBehaviour:
@@ -12394,10 +12305,10 @@ RectTransform:
   - {fileID: 154294506}
   m_Father: {fileID: 1363515480}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 25, y: -275}
-  m_SizeDelta: {x: 50, y: 50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &967994162
 MonoBehaviour:
@@ -16697,7 +16608,7 @@ RectTransform:
   m_Father: {fileID: 584878739}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -0.0000076293945, y: 0}
   m_SizeDelta: {x: -0.0000038147, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -17084,10 +16995,10 @@ RectTransform:
   - {fileID: 1871314697}
   m_Father: {fileID: 1021168253}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -50}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1300651161
 MonoBehaviour:
@@ -17774,94 +17685,6 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 75}
   m_Constraint: 0
   m_ConstraintCount: 2
---- !u!1 &1365410656
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1365410659}
-  - component: {fileID: 1365410658}
-  - component: {fileID: 1365410657}
-  m_Layer: 0
-  m_Name: InventoryStatsTest
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1365410657
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1365410656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5644dc1bb5613d9419eb3ddd3cb51826, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.EquipmentStatsTestRunner
-  helmetDefinition: {fileID: 11400000, guid: a0403135f61012d4cbd6ecb881ccfc59, type: 2}
-  bodyArmorDefinition: {fileID: 11400000, guid: 57b11413e7dc15140aeb6f78e91a72c1, type: 2}
-  rigDefinition: {fileID: 11400000, guid: b2499dcfd4427fb4fbcaf57996a457be, type: 2}
-  backpackDefinition: {fileID: 11400000, guid: a96b682f3b145a14e9a8cd36e2434b4a, type: 2}
---- !u!114 &1365410658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1365410656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19432e2f4d23b844b9810615cba41234, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.CharacterInventory
-  pocketColumns: 8
-  pocketRows: 6
-  equipment:
-    rid: 3698690491385905152
-  pockets:
-    rid: -2
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3698690491385905152
-      type: {class: EquipmentLoadout, ns: ExFillZone.Gameplay.Inventory, asm: Assembly-CSharp}
-      data:
-        helmet:
-          rid: -2
-        bodyArmor:
-          rid: -2
-        tacticalRig:
-          rid: -2
-        backpack:
-          rid: -2
-        primaryWeapon:
-          rid: -2
-        secondaryWeapon:
-          rid: -2
-        maxArmorMitigation: 0.8
---- !u!4 &1365410659
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1365410656}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.49031, y: 0, z: 85.07209}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1368046350
 GameObject:
   m_ObjectHideFlags: 0
@@ -19308,52 +19131,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1480015440}
   m_CullTransparentMesh: 1
---- !u!1 &1482547393
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1482547395}
-  - component: {fileID: 1482547394}
-  m_Layer: 0
-  m_Name: InventoryTest
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1482547394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1482547393}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac3723f48e92b3e4d9a34f2a8ff3fb25, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.InventoryTestRunner
-  FirstItem: {fileID: 11400000, guid: 6631b1caa14d5854d801ab4ec5b3accd, type: 2}
-  SecItem: {fileID: 11400000, guid: aece8372e5a69884187e887a36d96f91, type: 2}
---- !u!4 &1482547395
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1482547393}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1486226187
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20046,10 +19823,10 @@ RectTransform:
   - {fileID: 1554889564}
   m_Father: {fileID: 1021168253}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 50, y: -175.2}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1548872259
 MonoBehaviour:
@@ -22005,7 +21782,7 @@ RectTransform:
   m_Father: {fileID: 1974181565}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -0.0000076293945, y: 0}
   m_SizeDelta: {x: -0.0000038147, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -22935,53 +22712,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1149207874953999729, guid: fa698a739d1e06b418b39417da32a6dd, type: 3}
   m_PrefabInstance: {fileID: 1745159404}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1751961821
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1751961823}
-  - component: {fileID: 1751961822}
-  m_Layer: 0
-  m_Name: InventoryContaonerTest
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1751961822
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1751961821}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e75c2cf56d23a34dbb3375d0ff93d1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.InventoryContainerTestRunner
-  backpackDefinition: {fileID: 11400000, guid: 84d72df00d3e7fc4fbbf98d0df069849, type: 2}
-  rifleDefinition: {fileID: 11400000, guid: 6631b1caa14d5854d801ab4ec5b3accd, type: 2}
-  medkitDefinition: {fileID: 11400000, guid: aece8372e5a69884187e887a36d96f91, type: 2}
---- !u!4 &1751961823
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1751961821}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1760236904
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27288,10 +27018,10 @@ RectTransform:
   - {fileID: 904251782}
   m_Father: {fileID: 1363515480}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 25, y: -25}
-  m_SizeDelta: {x: 50, y: 50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1990879537
 MonoBehaviour:
@@ -29299,8 +29029,4 @@ SceneRoots:
   - {fileID: 1478993412}
   - {fileID: 1945760664}
   - {fileID: 891171863}
-  - {fileID: 1482547395}
-  - {fileID: 1751961823}
-  - {fileID: 508476060}
-  - {fileID: 1365410659}
   - {fileID: 845555806}
