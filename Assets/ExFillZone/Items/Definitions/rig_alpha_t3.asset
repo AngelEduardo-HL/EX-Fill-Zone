@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1706791b1599a440915b81b06f60910, type: 3}
+  m_Name: rig_alpha_t3
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ContainerDefinition
+  itemId: rig_alpha_t3
+  displayName: T3 Alpha-2
+  category: 7
+  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
+  gridSize: {x: 4, y: 3}
+  weight: 3
+  value: 7000
+  maxStack: 1
+  maxDurability: 0
+  icon: {fileID: 21300000, guid: 740b07213adf37a459788a43eb87edaf, type: 3}
+  worldPrefab: {fileID: 0}
+  equippedPrefab: {fileID: 0}
+  tier: 3
+  columns: 6
+  rows: 5
