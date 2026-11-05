@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: backpack_attack2_t3
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ContainerDefinition
   itemId: backpack_attack2_t3
-  displayName: T3 Attack 2
+  displayName: Attack 2
   category: 8
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
-  gridSize: {x: 3, y: 3}
+  description: 
+  gridSize: {x: 4, y: 4}
   weight: 3.5
   value: 8000
   maxStack: 1

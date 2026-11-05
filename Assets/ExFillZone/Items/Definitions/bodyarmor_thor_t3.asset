@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: bodyarmor_thor_t3
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ArmorDefinition
   itemId: bodyarmor_thor_t3
-  displayName: T3 THOR
+  displayName: THOR
   category: 6
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
-  gridSize: {x: 3, y: 3}
+  description: 
+  gridSize: {x: 4, y: 4}
   weight: 8.5
   value: 12500
   maxStack: 1

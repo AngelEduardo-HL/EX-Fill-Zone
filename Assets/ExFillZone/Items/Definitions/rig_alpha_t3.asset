@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: rig_alpha_t3
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ContainerDefinition
   itemId: rig_alpha_t3
-  displayName: T3 Alpha-2
+  displayName: Alpha-2
   category: 7
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
+  description: 
   gridSize: {x: 4, y: 3}
   weight: 3
   value: 7000

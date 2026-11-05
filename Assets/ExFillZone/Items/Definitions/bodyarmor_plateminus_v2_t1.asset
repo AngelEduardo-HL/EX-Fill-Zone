@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: bodyarmor_plateminus_v2_t1
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ArmorDefinition
   itemId: bodyarmor_plateminus_v2_t1
-  displayName: T1 PLATEminus V2
+  displayName: PLATEminus V2
   category: 6
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
+  description: 
   gridSize: {x: 3, y: 3}
   weight: 4
   value: 3000

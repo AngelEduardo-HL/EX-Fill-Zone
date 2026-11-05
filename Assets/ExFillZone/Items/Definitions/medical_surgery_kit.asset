@@ -15,8 +15,8 @@ MonoBehaviour:
   itemId: medical_surgery_kit
   displayName: CMS Surgical Kit
   category: 1
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
-  gridSize: {x: 2, y: 2}
+  description: 
+  gridSize: {x: 2, y: 1}
   weight: 0.8
   value: 1200
   maxStack: 1

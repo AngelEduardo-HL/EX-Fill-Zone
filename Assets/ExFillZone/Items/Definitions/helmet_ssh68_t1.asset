@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: helmet_ssh68_t1
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ArmorDefinition
   itemId: helmet_ssh68_t1
-  displayName: T1 SSh-68
+  displayName: SSh-68
   category: 5
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
+  description: 
   gridSize: {x: 2, y: 2}
   weight: 1.5
   value: 1000

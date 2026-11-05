@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: rig_thunderbolt_t2
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ContainerDefinition
   itemId: rig_thunderbolt_t2
-  displayName: T2 Thunderbolt
+  displayName: Thunderbolt
   category: 7
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
+  description: 
   gridSize: {x: 3, y: 2}
   weight: 2
   value: 3500

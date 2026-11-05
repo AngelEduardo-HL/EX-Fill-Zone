@@ -13,10 +13,9 @@ MonoBehaviour:
   m_Name: rig_m4_rscr_t1
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ContainerDefinition
   itemId: rig_m4_rscr_t1
-  displayName: T1 M4 RSCR-1
+  displayName: M4 RSCR-1
   category: 7
-  description: "PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisi\xF3n
-    y balance."
+  description: 
   gridSize: {x: 2, y: 3}
   weight: 1
   value: 1500

@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: bodyarmor_gen4_hmk_t2
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ArmorDefinition
   itemId: bodyarmor_gen4_hmk_t2
-  displayName: T2 Gen4 HMK
+  displayName: Gen4 HMK
   category: 6
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
-  gridSize: {x: 3, y: 3}
+  description: 
+  gridSize: {x: 3, y: 4}
   weight: 6
   value: 6500
   maxStack: 1

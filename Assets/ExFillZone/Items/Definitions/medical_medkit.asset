@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: medical_medkit
   displayName: AFAK Medkit
   category: 1
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
+  description: 
   gridSize: {x: 2, y: 2}
   weight: 0.5
   value: 500

@@ -10451,12 +10451,12 @@ MonoBehaviour:
   equipmentPanel: {fileID: 2041872656}
   groundView: {fileID: 1488941164}
   dragController: {fileID: 845555808}
-  rifleDefinition: {fileID: 11400000, guid: d0f2f5c0c2fb5724bfac95fde55f3fc2, type: 2}
-  medkitDefinition: {fileID: 11400000, guid: ed14552b57fb524782e640bf50a5b226, type: 2}
-  rigDefinition: {fileID: 11400000, guid: 1556da97765b53b697e2b4ee1df5af47, type: 2}
-  backpackDefinition: {fileID: 11400000, guid: de9b5608853d58508022e69608bd3bfc, type: 2}
-  helmetDefinition: {fileID: 11400000, guid: d96f06d15efb5cb9a7a42eb8984e4e2d, type: 2}
-  bodyArmorDefinition: {fileID: 11400000, guid: 503e0c72e4c159019ec404730b08f7df, type: 2}
+  rifleDefinition: {fileID: 11400000, guid: 507e5fc7740451269cbc3df3def91b3a, type: 2}
+  medkitDefinition: {fileID: 11400000, guid: dc3b8d00de485a8bbac827abe15beae4, type: 2}
+  rigDefinition: {fileID: 11400000, guid: 35c7d26c8409548bb67dc9ee4217eaac, type: 2}
+  backpackDefinition: {fileID: 11400000, guid: bbe9a25ef81f5f7d9c192c64b11dfbb9, type: 2}
+  helmetDefinition: {fileID: 11400000, guid: d3cb1ed6a7575a1c823b5510822d20e2, type: 2}
+  bodyArmorDefinition: {fileID: 11400000, guid: 6cd93c8e27305171baad716c1187b9b6, type: 2}
 --- !u!114 &845555805
 MonoBehaviour:
   m_ObjectHideFlags: 0

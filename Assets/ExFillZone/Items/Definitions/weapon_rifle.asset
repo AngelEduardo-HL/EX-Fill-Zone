@@ -15,7 +15,7 @@ MonoBehaviour:
   itemId: weapon_rifle
   displayName: RifleWeapon
   category: 4
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
+  description: 
   gridSize: {x: 4, y: 2}
   weight: 3.5
   value: 2500

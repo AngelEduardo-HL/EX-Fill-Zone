@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: medical_bandage
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ItemDefinition
   itemId: medical_bandage
-  displayName: Bandage
+  displayName: Army Bandage
   category: 1
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
+  description: 
   gridSize: {x: 1, y: 1}
   weight: 0.1
   value: 100

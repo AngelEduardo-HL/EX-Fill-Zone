@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: helmet_altyn_t3
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ArmorDefinition
   itemId: helmet_altyn_t3
-  displayName: T3 Altyn
+  displayName: Altyn
   category: 5
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
+  description: 
   gridSize: {x: 2, y: 2}
   weight: 3
   value: 5000

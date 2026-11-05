@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: backpack_tbag_t1
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ContainerDefinition
   itemId: backpack_tbag_t1
-  displayName: T1 T-Bag
+  displayName: T-Bag
   category: 8
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
+  description: 
   gridSize: {x: 2, y: 3}
   weight: 1
   value: 1000

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: helmet_achhc_t2
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ArmorDefinition
   itemId: helmet_achhc_t2
-  displayName: T2 ACHHC
+  displayName: ACHHC
   category: 5
-  description: PROPUESTA DE PRUEBA. Valores provisionales pendientes de revisión y balance.
+  description: 
   gridSize: {x: 2, y: 2}
   weight: 2
   value: 2500
