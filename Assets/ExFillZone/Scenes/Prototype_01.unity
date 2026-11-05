@@ -10451,7 +10451,7 @@ MonoBehaviour:
   equipmentPanel: {fileID: 2041872656}
   groundView: {fileID: 1488941164}
   dragController: {fileID: 845555808}
-  rifleDefinition: {fileID: 11400000, guid: 6631b1caa14d5854d801ab4ec5b3accd, type: 2}
+  rifleDefinition: {fileID: 11400000, guid: d0f2f5c0c2fb5724bfac95fde55f3fc2, type: 2}
   medkitDefinition: {fileID: 11400000, guid: ed14552b57fb524782e640bf50a5b226, type: 2}
   rigDefinition: {fileID: 11400000, guid: 1556da97765b53b697e2b4ee1df5af47, type: 2}
   backpackDefinition: {fileID: 11400000, guid: de9b5608853d58508022e69608bd3bfc, type: 2}
