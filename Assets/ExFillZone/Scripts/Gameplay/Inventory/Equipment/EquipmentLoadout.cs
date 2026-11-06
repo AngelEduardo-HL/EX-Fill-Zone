@@ -88,6 +88,20 @@ namespace ExFillZone.Gameplay.Inventory
             };
         }
 
+        public bool TryEquipNew(ItemDefinition definition, EquipmentSlotType slot)
+        {
+            if (!IsValidForSlot(definition, slot) || GetItem(slot) != null)
+                return false;
+
+            ItemInstance item = new ItemInstance(definition);
+
+            if (!item.TryClaim(this))
+                return false;
+
+            SetItem(slot, item);
+            return true;
+        }
+
         public bool TryEquip(InventoryGrid source, ItemInstance item, EquipmentSlotType slot)
         {
             if (source == null || item?.Definition == null) return false;
