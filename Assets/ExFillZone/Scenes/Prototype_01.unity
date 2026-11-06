@@ -9369,9 +9369,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 139.9, y: -38.714417}
-  m_SizeDelta: {x: 245.79999, y: 247.9999}
-  m_Pivot: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 18, y: -35}
+  m_SizeDelta: {x: 250, y: 270}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &629359813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10005,7 +10005,7 @@ MonoBehaviour:
   m_ChildAlignment: 1
   m_Spacing: 8
   m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 1
+  m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
@@ -18409,11 +18409,11 @@ RectTransform:
   - {fileID: 772158919}
   m_Father: {fileID: 1810372974}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 85.8291, y: -216.62546}
-  m_SizeDelta: {x: 221.12, y: 297.53}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 300, y: -35}
+  m_SizeDelta: {x: 295, y: 245}
+  m_Pivot: {x: 0, y: 1}
 --- !u!114 &1239485073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18469,11 +18469,11 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 1
+  m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 1
   m_CellSize: {x: 188, y: 106}
-  m_Spacing: {x: 0, y: 60}
+  m_Spacing: {x: 0, y: 30}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!1 &1246508996
@@ -26894,7 +26894,7 @@ MonoBehaviour:
   m_MinWidth: -1
   m_MinHeight: -1
   m_PreferredWidth: -1
-  m_PreferredHeight: 350
+  m_PreferredHeight: 380
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
@@ -33180,7 +33180,7 @@ MonoBehaviour:
   groundPanel: {fileID: 1015070303}
   enemyPanelRoot: {fileID: 1888041699}
   enemyPanels: {fileID: 693650133}
-  enemyEquipment: {fileID: 0}
+  enemyEquipment: {fileID: 1810372976}
 --- !u!1001 &3297485493810991237
 PrefabInstance:
   m_ObjectHideFlags: 0
