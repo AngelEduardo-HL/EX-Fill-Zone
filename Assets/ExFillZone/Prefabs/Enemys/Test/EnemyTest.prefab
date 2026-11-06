@@ -828,7 +828,6 @@ GameObject:
   - component: {fileID: -410879114629806307}
   - component: {fileID: 2428524595656038523}
   - component: {fileID: 3347950303678928556}
-  - component: {fileID: 7074325190159134013}
   m_Layer: 0
   m_Name: EnemyTest
   m_TagString: Untagged
@@ -1105,25 +1104,6 @@ MonoBehaviour:
         secondaryWeapon:
           rid: -2
         maxArmorMitigation: 0.8
---- !u!114 &7074325190159134013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6011252803969196441}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2f74a52c30310348a646913f714f205, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.CharacterStartingLoadout
-  helmet: {fileID: 0}
-  bodyArmor: {fileID: 0}
-  tacticalRig: {fileID: 0}
-  backpack: {fileID: 0}
-  primaryWeapon: {fileID: 0}
-  secondaryWeapon: {fileID: 0}
-  pocketItems: []
 --- !u!1 &6101293466445752823
 GameObject:
   m_ObjectHideFlags: 0
