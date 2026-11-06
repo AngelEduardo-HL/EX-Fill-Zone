@@ -17,7 +17,7 @@ MonoBehaviour:
     entries:
     - item: {fileID: 11400000, guid: 26eb30d3c6295c05b2a044bfa4cc0d3d, type: 2}
       weight: 35
-    - item: {fileID: 11400000, guid: a0403135f61012d4cbd6ecb881ccfc59, type: 2}
+    - item: {fileID: 11400000, guid: d3cb1ed6a7575a1c823b5510822d20e2, type: 2}
       weight: 60
   bodyArmors:
     rollChance: 95

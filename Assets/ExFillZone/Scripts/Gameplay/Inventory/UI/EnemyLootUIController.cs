@@ -57,6 +57,14 @@ namespace ExFillZone.Gameplay.Inventory
             return true;
         }
 
+        public void RefreshActiveLootUI()
+        {
+            if (activeLoot == null) return;
+
+            enemyPanels?.Refresh();
+            enemyEquipment?.Refresh();
+        }
+
         public void CloseLoot()
         {
             activeLoot = null;
@@ -64,5 +72,6 @@ namespace ExFillZone.Gameplay.Inventory
             if (enemyPanelRoot != null) enemyPanelRoot.SetActive(false);
             if (groundPanel != null) groundPanel.SetActive(true);
         }
+
     }
 }

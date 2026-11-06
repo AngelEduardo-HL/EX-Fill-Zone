@@ -26,6 +26,10 @@ namespace ExFillZone.Gameplay.Inventory
         [SerializeField] private InventoryItemUI itemPrefab;
         [SerializeField] private InventoryDiscardZoneUI discardZone;
 
+        [Header("Enemy Loot")]
+        [SerializeField] private EnemyLootUIController enemyLootUI;
+
+
         private readonly EquipmentSlotType[] equipmentPriority =
         {
             EquipmentSlotType.Helmet,
@@ -559,6 +563,7 @@ namespace ExFillZone.Gameplay.Inventory
             groundView?.Refresh();
             equipmentPanel?.Refresh();
             externalLootView?.Refresh();
+            enemyLootUI?.RefreshActiveLootUI();
         }
 
         private void FinishDrag(bool success)
