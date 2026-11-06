@@ -828,6 +828,7 @@ GameObject:
   - component: {fileID: -410879114629806307}
   - component: {fileID: 2428524595656038523}
   - component: {fileID: 3347950303678928556}
+  - component: {fileID: 1139272526004552011}
   m_Layer: 0
   m_Name: EnemyTest
   m_TagString: Untagged
@@ -1104,6 +1105,20 @@ MonoBehaviour:
         secondaryWeapon:
           rid: -2
         maxArmorMitigation: 0.8
+--- !u!114 &1139272526004552011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6011252803969196441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0782e3852be25746bfc51285ba249c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Enemies.EnemyLoadoutGenerator
+  profile: {fileID: 11400000, guid: 37a3026aa73b7f04fb466a16430848b8, type: 2}
+  lootTableOverride: {fileID: 0}
 --- !u!1 &6101293466445752823
 GameObject:
   m_ObjectHideFlags: 0
