@@ -101,7 +101,31 @@ namespace ExFillZone.Gameplay.Inventory
             SetItem(slot, item);
             return true;
         }
+        public bool TryTransferEquippedTo(EquipmentLoadout destination, EquipmentSlotType slot)
+        {
+            if (destination == null || ReferenceEquals(this, destination)) return false;
 
+            ItemInstance item = GetItem(slot);
+
+            if (item == null || !item.IsOwnedBy(this) || destination.GetItem(slot) != null)
+                return false;
+
+            if (!destination.IsValidForSlot(item.Definition, slot))
+                return false;
+
+            if (!item.TryRelease(this)) return false;
+
+            if (!item.TryClaim(destination))
+            {
+                item.TryClaim(this);
+                return false;
+            }
+
+            destination.SetItem(slot, item);
+            SetItem(slot, null);
+
+            return true;
+        }
         public bool TryEquip(InventoryGrid source, ItemInstance item, EquipmentSlotType slot)
         {
             if (source == null || item?.Definition == null) return false;

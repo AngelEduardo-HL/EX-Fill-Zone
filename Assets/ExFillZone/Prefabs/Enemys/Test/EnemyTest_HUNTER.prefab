@@ -1050,6 +1050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Combat.EnemyHealth
   maxHealth: 100
+  lootCratePrefab: {fileID: 6718431690204251645, guid: 19ff62a2ee85fa2418103872fac83b7a, type: 3}
   ammoDrop: {fileID: 3334596666149405665, guid: 5c3a19de60903c24ca04d4dd8e661a77, type: 3}
   dropPoint: {fileID: 7137140542474851378}
 --- !u!114 &2428524595656038523
