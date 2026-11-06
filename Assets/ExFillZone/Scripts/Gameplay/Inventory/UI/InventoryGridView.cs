@@ -27,6 +27,11 @@ namespace ExFillZone.Gameplay.Inventory
 
         private InventoryGrid inventory;
 
+        public void ConfigureDrag(InventoryDragController controller)
+        {
+            dragController = controller;
+        }
+
         public void ShowGrid(InventoryGrid grid)
         {
             inventory = grid;

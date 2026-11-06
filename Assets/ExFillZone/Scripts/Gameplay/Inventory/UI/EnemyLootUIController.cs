@@ -18,6 +18,22 @@ namespace ExFillZone.Gameplay.Inventory
 
         private EnemyLootContainer activeLoot;
 
+        public bool IsLootOpen => activeLoot != null && enemyPanelRoot != null && enemyPanelRoot.activeInHierarchy;
+
+        public CharacterInventory ActiveInventory => IsLootOpen ? activeLoot.Inventory : null;
+
+        public PlayerEquipmentPanelUI EnemyEquipmentPanel => enemyEquipment;
+
+        public InventoryGridView EnemyHandsView => enemyPanels != null ? enemyPanels.HandsView : null;
+        public InventoryGridView EnemyRigView => enemyPanels != null ? enemyPanels.RigView : null;
+        public InventoryGridView EnemyBackpackView => enemyPanels != null ? enemyPanels.BackpackView : null;
+
+        public void ConfigureDrag(InventoryDragController controller)
+        {
+            enemyPanels?.ConfigureDrag(controller);
+            enemyEquipment?.ConfigureDrag(controller);
+        }
+
         private void Awake()
         {
             if (enemyPanelRoot != null) enemyPanelRoot.SetActive(false);

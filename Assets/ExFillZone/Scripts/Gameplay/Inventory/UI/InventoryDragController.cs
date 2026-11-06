@@ -64,6 +64,7 @@ namespace ExFillZone.Gameplay.Inventory
         {
             character = inventory;
             discardZone?.SetVisible(false);
+            enemyLootUI?.ConfigureDrag(this);
         }
 
         private void Update()
@@ -106,59 +107,80 @@ namespace ExFillZone.Gameplay.Inventory
 
         public void OnEquipmentClicked(EquipmentSlotUI slot)
         {
-            if (movingItem != null || character == null || slot?.Item == null) return;
+            if (movingItem != null || slot?.Item == null) return;
 
             bool ctrl = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
-            if (!ctrl || !ReferenceEquals(character.Equipment.GetItem(slot.SlotType), slot.Item))
+            if (!ctrl) return;
+
+            EquipmentLoadout owner = GetEquipmentOwner(slot);
+
+            if (owner == null || !ReferenceEquals(owner.GetItem(slot.SlotType), slot.Item))
                 return;
 
-            bool success = TryUnequipTo(slot, handsView) ||
-                           TryUnequipTo(slot, rigView) ||
-                           TryUnequipTo(slot, backpackView);
+            bool success = TryUnequipTo(owner, slot, handsView) ||
+                           TryUnequipTo(owner, slot, rigView) ||
+                           TryUnequipTo(owner, slot, backpackView);
 
-            InventoryGridView external = GetExternalInventory();
-
-            if (!success && external != null && external != groundView)
-                success = TryUnequipTo(slot, external);
-
-            if (!success)
-                success = TryUnequipTo(slot, groundView);
+            if (!success && ReferenceEquals(owner, character?.Equipment))
+            {
+                InventoryGridView external = GetExternalInventory();
+                if (external != null) success = TryUnequipTo(owner, slot, external);
+            }
 
             if (success) RefreshAll();
 
             Debug.Log($"[Shortcut] Unequip {slot.SlotType}: {(success ? "Success" : "Cancelled")}", this);
         }
 
-        private bool TryUnequipTo(EquipmentSlotUI slot, InventoryGridView destination)
+        private bool TryUnequipTo(EquipmentLoadout owner, EquipmentSlotUI slot, InventoryGridView destination)
         {
-            if (destination?.Grid == null || !destination.gameObject.activeInHierarchy)
+            if (owner == null || destination?.Grid == null || !destination.gameObject.activeInHierarchy)
                 return false;
 
-            return character.Equipment.TryUnequipAuto(slot.SlotType, destination.Grid);
+            return owner.TryUnequipAuto(slot.SlotType, destination.Grid);
         }
+
 
         private InventoryGridView GetExternalInventory()
         {
+            if (enemyLootUI != null && enemyLootUI.IsLootOpen) return null;
+
             if (externalLootView != null && externalLootView.Grid != null &&
                 externalLootView.gameObject.activeInHierarchy)
                 return externalLootView;
 
-            return groundAsTemporaryLoot ? groundView : null;
+            return groundAsTemporaryLoot && groundView != null &&
+                   groundView.gameObject.activeInHierarchy ? groundView : null;
         }
+
 
         private bool TryQuickTransfer(InventoryItemUI visual)
         {
             InventoryGrid source = visual.SourceGrid.Grid;
+
+            if (enemyLootUI != null && enemyLootUI.IsLootOpen)
+            {
+                if (IsEnemyGrid(source))
+                    return TryTransferTo(visual, handsView) ||
+                           TryTransferTo(visual, rigView) ||
+                           TryTransferTo(visual, backpackView);
+
+                if (IsPlayerGrid(source))
+                    return TryTransferTo(visual, enemyLootUI.EnemyHandsView) ||
+                           TryTransferTo(visual, enemyLootUI.EnemyRigView) ||
+                           TryTransferTo(visual, enemyLootUI.EnemyBackpackView);
+
+                return false;
+            }
+
             InventoryGridView external = GetExternalInventory();
 
             if (external?.Grid == null) return false;
 
             if (ReferenceEquals(source, external.Grid))
-            {
                 return TryTransferTo(visual, handsView) ||
                        TryTransferTo(visual, rigView) ||
                        TryTransferTo(visual, backpackView);
-            }
 
             if (!IsPlayerGrid(source)) return false;
 
@@ -246,6 +268,33 @@ namespace ExFillZone.Gameplay.Inventory
                     ReferenceEquals(grid, character.BackpackInventory));
         }
 
+        private bool IsEnemyGrid(InventoryGrid grid)
+        {
+            CharacterInventory enemy = enemyLootUI?.ActiveInventory;
+
+            return enemy != null && grid != null &&
+                   (ReferenceEquals(grid, enemy.Pockets) ||
+                    ReferenceEquals(grid, enemy.RigInventory) ||
+                    ReferenceEquals(grid, enemy.BackpackInventory));
+        }
+
+
+        private EquipmentLoadout GetEquipmentOwner(EquipmentSlotUI slot)
+        {
+            if (slot == null) return null;
+
+            if (equipmentPanel != null && character != null &&
+                slot.transform.IsChildOf(equipmentPanel.transform))
+                return character.Equipment;
+
+            if (enemyLootUI != null && enemyLootUI.IsLootOpen &&
+                enemyLootUI.EnemyEquipmentPanel != null &&
+                slot.transform.IsChildOf(enemyLootUI.EnemyEquipmentPanel.transform))
+                return enemyLootUI.ActiveInventory?.Equipment;
+
+            return null;
+        }
+
         private bool TryDropFromGrid(InventoryGridView origin, ItemInstance item)
         {
             if (groundView?.Grid == null || origin?.Grid == null || !IsPlayerGrid(origin.Grid))
@@ -259,7 +308,17 @@ namespace ExFillZone.Gameplay.Inventory
             if (character == null || groundView?.Grid == null || slot?.Item == null)
                 return false;
 
+            if (!ReferenceEquals(GetEquipmentOwner(slot), character.Equipment))
+                return false;
+
             return character.Equipment.TryUnequipAuto(slot.SlotType, groundView.Grid);
+        }
+
+        private EquipmentSlotUI GetHoveredSlot()
+        {
+            EquipmentSlotUI enemySlot = enemyLootUI?.EnemyEquipmentPanel?.GetSlotAt(pointerPosition, pointerCamera);
+
+            return enemySlot != null ? enemySlot : equipmentPanel?.GetSlotAt(pointerPosition, pointerCamera);
         }
 
         // DRAG & DROP
@@ -292,8 +351,13 @@ namespace ExFillZone.Gameplay.Inventory
 
         public void BeginDragFromSlot(EquipmentSlotUI slot, PointerEventData eventData)
         {
-            if (movingItem != null || slot?.Item == null || character == null) return;
-            if (!ReferenceEquals(character.Equipment.GetItem(slot.SlotType), slot.Item)) return;
+            if (movingItem != null || slot?.Item == null) return;
+
+            EquipmentLoadout owner = GetEquipmentOwner(slot);
+
+            if (owner == null || !ReferenceEquals(owner.GetItem(slot.SlotType), slot.Item))
+                return;
+
             if (!CreatePreview(slot.Item, slot.gameObject, eventData)) return;
 
             sourceItemUI = null;
@@ -301,7 +365,7 @@ namespace ExFillZone.Gameplay.Inventory
             sourceSlot = slot;
             rotated = false;
 
-            discardZone?.SetVisible(true);
+            discardZone?.SetVisible(ReferenceEquals(owner, character?.Equipment));
             RefreshPreview();
         }
 
@@ -372,6 +436,7 @@ namespace ExFillZone.Gameplay.Inventory
             CompleteDrag(eventData);
         }
 
+
         private void CompleteDrag(PointerEventData eventData)
         {
             UpdatePointer(eventData);
@@ -387,17 +452,26 @@ namespace ExFillZone.Gameplay.Inventory
             }
             else
             {
-                EquipmentSlotUI targetSlot = equipmentPanel != null
-                    ? equipmentPanel.GetSlotAt(pointerPosition, pointerCamera)
-                    : null;
+                EquipmentSlotUI targetSlot = GetHoveredSlot();
 
                 if (targetSlot != null)
                 {
                     if (CanDropOnSlot(targetSlot))
                     {
-                        success = sourceGrid != null
-                            ? character.Equipment.TryEquipOrSwap(sourceGrid.Grid, movingItem, targetSlot.SlotType)
-                            : character.Equipment.TryMoveBetweenSlots(sourceSlot.SlotType, targetSlot.SlotType);
+                        EquipmentLoadout destination = GetEquipmentOwner(targetSlot);
+
+                        if (sourceGrid != null)
+                        {
+                            success = destination.TryEquipOrSwap(sourceGrid.Grid, movingItem, targetSlot.SlotType);
+                        }
+                        else
+                        {
+                            EquipmentLoadout source = GetEquipmentOwner(sourceSlot);
+
+                            success = ReferenceEquals(source, destination)
+                                ? source.TryMoveBetweenSlots(sourceSlot.SlotType, targetSlot.SlotType)
+                                : source.TryTransferEquippedTo(destination, sourceSlot.SlotType, targetSlot.SlotType);
+                        }
                     }
                 }
                 else
@@ -408,24 +482,24 @@ namespace ExFillZone.Gameplay.Inventory
                     {
                         if (sourceGrid != null)
                         {
-                            if (ReferenceEquals(sourceGrid.Grid, targetGrid.Grid))
+                            success = ReferenceEquals(sourceGrid.Grid, targetGrid.Grid)
+                                ? sourceGrid.Grid.TryMove(movingItem, position, rotated)
+                                : InventoryTransfer.TryTransfer(sourceGrid.Grid, targetGrid.Grid, movingItem, position, rotated);
+
+                            if (!success && targetGrid == groundView && !ReferenceEquals(sourceGrid.Grid, targetGrid.Grid))
+                                success = InventoryTransfer.TryAutoTransfer(sourceGrid.Grid, targetGrid.Grid, movingItem);
+                        }
+                        else
+                        {
+                            EquipmentLoadout source = GetEquipmentOwner(sourceSlot);
+
+                            if (source != null)
                             {
-                                success = sourceGrid.Grid.TryMove(movingItem, position, rotated);
-                            }
-                            else
-                            {
-                                success = InventoryTransfer.TryTransfer(sourceGrid.Grid, targetGrid.Grid, movingItem, position, rotated);
+                                success = source.TryUnequip(sourceSlot.SlotType, targetGrid.Grid, position, rotated);
 
                                 if (!success && targetGrid == groundView)
-                                    success = InventoryTransfer.TryAutoTransfer(sourceGrid.Grid, targetGrid.Grid, movingItem);
+                                    success = source.TryUnequipAuto(sourceSlot.SlotType, targetGrid.Grid);
                             }
-                        }
-                        else if (sourceSlot != null)
-                        {
-                            success = character.Equipment.TryUnequip(sourceSlot.SlotType, targetGrid.Grid, position, rotated);
-
-                            if (!success && targetGrid == groundView)
-                                success = character.Equipment.TryUnequipAuto(sourceSlot.SlotType, targetGrid.Grid);
                         }
                     }
                 }
@@ -436,18 +510,28 @@ namespace ExFillZone.Gameplay.Inventory
 
         private bool CanDropOnSlot(EquipmentSlotUI slot)
         {
-            if (character == null || movingItem == null || slot == null) return false;
+            if (movingItem == null || slot == null) return false;
+
+            EquipmentLoadout destination = GetEquipmentOwner(slot);
+            if (destination == null) return false;
 
             if (sourceGrid != null)
-                return character.Equipment.CanEquipOrSwap(sourceGrid.Grid, movingItem, slot.SlotType);
+                return destination.CanEquipOrSwap(sourceGrid.Grid, movingItem, slot.SlotType);
 
-            return sourceSlot != null &&
-                   character.Equipment.CanMoveBetweenSlots(sourceSlot.SlotType, slot.SlotType);
+            EquipmentLoadout source = GetEquipmentOwner(sourceSlot);
+            if (source == null) return false;
+
+            return ReferenceEquals(source, destination)
+                ? source.CanMoveBetweenSlots(sourceSlot.SlotType, slot.SlotType)
+                : source.CanTransferEquippedTo(destination, sourceSlot.SlotType, slot.SlotType);
         }
+
 
         private bool CanDropOnGrid(InventoryGridView grid, Vector2Int position)
         {
             if (grid?.Grid == null || movingItem == null) return false;
+
+            EquipmentLoadout sourceEquipment = GetEquipmentOwner(sourceSlot);
 
             if (sourceGrid != null && ReferenceEquals(sourceGrid.Grid, grid.Grid))
                 return grid.Grid.CanMove(movingItem, position, rotated);
@@ -463,8 +547,7 @@ namespace ExFillZone.Gameplay.Inventory
 
                 return sourceGrid != null
                     ? sourceGrid.Grid.Contains(movingItem)
-                    : sourceSlot != null && character != null &&
-                      ReferenceEquals(character.Equipment.GetItem(sourceSlot.SlotType), movingItem);
+                    : sourceEquipment != null && ReferenceEquals(sourceEquipment.GetItem(sourceSlot.SlotType), movingItem);
             }
 
             if (ReferenceEquals(movingItem.Contents, grid.Grid) ||
@@ -474,8 +557,8 @@ namespace ExFillZone.Gameplay.Inventory
             if (sourceGrid != null)
                 return sourceGrid.Grid.Contains(movingItem);
 
-            return sourceSlot != null && character != null &&
-                   ReferenceEquals(character.Equipment.GetItem(sourceSlot.SlotType), movingItem);
+            return sourceEquipment != null &&
+                   ReferenceEquals(sourceEquipment.GetItem(sourceSlot.SlotType), movingItem);
         }
 
         private void RefreshPreview()
@@ -496,10 +579,7 @@ namespace ExFillZone.Gameplay.Inventory
             }
             else
             {
-                EquipmentSlotUI targetSlot = equipmentPanel != null
-                    ? equipmentPanel.GetSlotAt(pointerPosition, pointerCamera)
-                    : null;
-
+                EquipmentSlotUI targetSlot = GetHoveredSlot();
                 bool valid;
 
                 if (targetSlot != null)
@@ -543,6 +623,7 @@ namespace ExFillZone.Gameplay.Inventory
             }
         }
 
+
         private InventoryGridView GetHoveredGrid(out Vector2Int position)
         {
             if (movingItem != null)
@@ -550,12 +631,25 @@ namespace ExFillZone.Gameplay.Inventory
                 if (handsView != null && handsView.TryGetDropPosition(pointerPosition, pointerCamera, movingItem, rotated, out position)) return handsView;
                 if (rigView != null && rigView.TryGetDropPosition(pointerPosition, pointerCamera, movingItem, rotated, out position)) return rigView;
                 if (backpackView != null && backpackView.TryGetDropPosition(pointerPosition, pointerCamera, movingItem, rotated, out position)) return backpackView;
+
+                if (enemyLootUI != null && enemyLootUI.IsLootOpen)
+                {
+                    InventoryGridView hands = enemyLootUI.EnemyHandsView;
+                    InventoryGridView rig = enemyLootUI.EnemyRigView;
+                    InventoryGridView backpack = enemyLootUI.EnemyBackpackView;
+
+                    if (hands != null && hands.TryGetDropPosition(pointerPosition, pointerCamera, movingItem, rotated, out position)) return hands;
+                    if (rig != null && rig.TryGetDropPosition(pointerPosition, pointerCamera, movingItem, rotated, out position)) return rig;
+                    if (backpack != null && backpack.TryGetDropPosition(pointerPosition, pointerCamera, movingItem, rotated, out position)) return backpack;
+                }
+
                 if (groundView != null && groundView.TryGetDropPosition(pointerPosition, pointerCamera, movingItem, rotated, out position)) return groundView;
             }
 
             position = Vector2Int.zero;
             return null;
         }
+
 
         private void RefreshAll()
         {

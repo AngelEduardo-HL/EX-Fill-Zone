@@ -15,6 +15,17 @@ namespace ExFillZone.Gameplay.Inventory
 
         private CharacterInventory inventory;
 
+        public InventoryGridView HandsView => handsView;
+        public InventoryGridView RigView => rigView;
+        public InventoryGridView BackpackView => backpackView;
+
+        public void ConfigureDrag(InventoryDragController controller)
+        {
+            handsView?.ConfigureDrag(controller);
+            rigView?.ConfigureDrag(controller);
+            backpackView?.ConfigureDrag(controller);
+        }
+
         public void Bind(CharacterInventory character)
         {
             inventory = character;

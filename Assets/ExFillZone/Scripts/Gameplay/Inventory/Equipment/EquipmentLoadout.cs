@@ -101,6 +101,58 @@ namespace ExFillZone.Gameplay.Inventory
             SetItem(slot, item);
             return true;
         }
+
+        public bool CanTransferEquippedTo(EquipmentLoadout destination, EquipmentSlotType from, EquipmentSlotType to)
+        {
+            if (destination == null || ReferenceEquals(this, destination)) return false;
+
+            ItemInstance incoming = GetItem(from);
+            ItemInstance outgoing = destination.GetItem(to);
+
+            if (incoming?.Definition == null || incoming.Quantity != 1 ||
+                !incoming.IsOwnedBy(this) || !destination.IsValidForSlot(incoming.Definition, to))
+                return false;
+
+            return outgoing == null ||
+                   (outgoing.IsOwnedBy(destination) && IsValidForSlot(outgoing.Definition, from));
+        }
+
+        public bool TryTransferEquippedTo(EquipmentLoadout destination, EquipmentSlotType from, EquipmentSlotType to)
+        {
+            if (!CanTransferEquippedTo(destination, from, to)) return false;
+
+            ItemInstance incoming = GetItem(from);
+            ItemInstance outgoing = destination.GetItem(to);
+
+            if (!incoming.TryRelease(this)) return false;
+
+            if (outgoing != null && !outgoing.TryRelease(destination))
+            {
+                incoming.TryClaim(this);
+                return false;
+            }
+
+            if (!incoming.TryClaim(destination))
+            {
+                if (outgoing != null) outgoing.TryClaim(destination);
+                incoming.TryClaim(this);
+                return false;
+            }
+
+            if (outgoing != null && !outgoing.TryClaim(this))
+            {
+                incoming.TryRelease(destination);
+                incoming.TryClaim(this);
+                outgoing.TryClaim(destination);
+                return false;
+            }
+
+            SetItem(from, outgoing);
+            destination.SetItem(to, incoming);
+
+            return true;
+        }
+
         public bool TryTransferEquippedTo(EquipmentLoadout destination, EquipmentSlotType slot)
         {
             if (destination == null || ReferenceEquals(this, destination)) return false;
