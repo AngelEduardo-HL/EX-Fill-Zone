@@ -14,6 +14,9 @@ namespace ExFillZone.Gameplay.Inventory
         [SerializeField] private EquipmentSlotUI primaryWeaponSlot;
         [SerializeField] private EquipmentSlotUI secondaryWeaponSlot;
 
+        [Header("Weapon HUD")]
+        [SerializeField] private PlayerWeaponSelectionUI weaponSelectionUI;
+
         [Header("Weight")]
         [SerializeField] private Slider weightSlider;
         [SerializeField] private TMP_Text weightText;
@@ -25,6 +28,7 @@ namespace ExFillZone.Gameplay.Inventory
         public void Bind(CharacterInventory character)
         {
             inventory = character;
+            weaponSelectionUI?.Bind(character);
 
             if (weightSlider != null)
             {
@@ -50,6 +54,7 @@ namespace ExFillZone.Gameplay.Inventory
             secondaryWeaponSlot?.ShowItem(equipment.GetItem(EquipmentSlotType.SecondaryWeapon));
 
             RefreshWeight();
+            weaponSelectionUI?.RefreshWeapons();
         }
 
         private void RefreshWeight()
