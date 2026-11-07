@@ -1,4 +1,6 @@
 using System;
+using ExFillZone.Gameplay.Inventory;
+using ExFillZone.Gameplay.Loot;
 using UnityEngine;
 
 namespace ExFillZone.Gameplay.Combat
@@ -8,7 +10,8 @@ namespace ExFillZone.Gameplay.Combat
         [Header("Health")]
         [SerializeField, Min(1f)] private float maxHealth = 50f;
 
-        [Header("Drop")]
+        [Header("Loot")]
+        [SerializeField] private EnemyLootContainer lootCratePrefab;
         [SerializeField] private GameObject ammoDrop;
         [SerializeField] private Transform dropPoint;
 
@@ -46,8 +49,26 @@ namespace ExFillZone.Gameplay.Combat
             if (isDead) return;
 
             isDead = true;
-            DropAmmo();
+            DropLoot();
             Destroy(gameObject);
+        }
+
+        private void DropLoot()
+        {
+            Vector3 position = dropPoint != null ? dropPoint.position : transform.position;
+            CharacterInventory inventory = GetComponent<CharacterInventory>();
+
+            if (lootCratePrefab != null && inventory != null)
+            {
+                EnemyLootContainer crate = Instantiate(lootCratePrefab, position, Quaternion.identity);
+
+                if (!crate.Initialize(inventory))
+                    Debug.LogWarning($"[EnemyLoot] La transferencia de {name} fue incompleta.", this);
+
+                return;
+            }
+
+            DropAmmo();
         }
 
         private void DropAmmo()

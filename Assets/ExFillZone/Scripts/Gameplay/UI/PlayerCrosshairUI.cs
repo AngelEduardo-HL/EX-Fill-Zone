@@ -1,4 +1,5 @@
 using DG.Tweening;
+using ExFillZone.Gameplay.Inventory;
 using ExFillZone.Gameplay.Player;
 using UnityEngine;
 
@@ -81,6 +82,8 @@ namespace ExFillZone.Gameplay.UI
 
         private void Update()
         {
+            if (InventoryMenuController.IsOpen) return;
+
             UpdateCrosshairPosition();
 
             bool aiming =
@@ -261,6 +264,27 @@ namespace ExFillZone.Gameplay.UI
                     )
                     .SetEase(Ease.OutQuad);
             }
+        }
+
+        public void OnInventoryOpened()
+        {
+            normalCrosshair?.DOKill();
+            aimCrosshair?.DOKill();
+            normalCrosshairGroup?.DOKill();
+            aimCrosshairGroup?.DOKill();
+            aimOverlay?.DOKill();
+
+            if (normalCrosshairGroup != null) normalCrosshairGroup.alpha = 0f;
+            if (aimCrosshairGroup != null) aimCrosshairGroup.alpha = 0f;
+            if (aimOverlay != null) aimOverlay.alpha = 0f;
+        }
+
+        public void OnInventoryClosed()
+        {
+            if (!isActiveAndEnabled || input == null || playerAim == null) return;
+
+            lastAimState = playerAim.IsAiming;
+            SetInitialState();
         }
 
         private void OnDisable()

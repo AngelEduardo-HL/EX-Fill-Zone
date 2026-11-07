@@ -57,6 +57,16 @@ namespace ExFillZone.Gameplay.Inventory
                 }
             }
 
+            if (destination.AutoExpandRows && !ReferenceEquals(source, destination) &&
+                source.Contains(item) && !ReferenceEquals(item.Contents, destination))
+            {
+                Vector2Int size = item.Definition.GridSize;
+                bool rotated = size.x > destination.Width;
+
+                if (!rotated || size.y <= destination.Width)
+                    return TryTransfer(source, destination, item, new Vector2Int(0, destination.Height), rotated);
+            }
+
             return false;
         }
     }

@@ -47,17 +47,21 @@ namespace ExFillZone.Gameplay.Inventory
         [SerializeField, Min(1)] private int height = 1;
         [SerializeField] private List<InventoryPlacement> placements = new List<InventoryPlacement>();
         [SerializeField] private bool acceptsContainers = true;
+        [SerializeField] private bool autoExpandRows;
+
+        public bool AutoExpandRows => autoExpandRows;
 
         public bool AcceptsContainers => acceptsContainers;
         public int Width => width;
         public int Height => height;
         public IReadOnlyList<InventoryPlacement> Placements => placements;
 
-        public InventoryGrid(int width, int height, bool acceptsContainers = true)
+        public InventoryGrid(int width, int height, bool acceptsContainers = true, bool autoExpandRows = false)
         {
             this.width = Mathf.Max(1, width);
             this.height = Mathf.Max(1, height);
             this.acceptsContainers = acceptsContainers;
+            this.autoExpandRows = autoExpandRows;
         }
 
         public bool CanPlace(ItemInstance item, Vector2Int position, bool rotated = false)
@@ -73,7 +77,8 @@ namespace ExFillZone.Gameplay.Inventory
             Vector2Int size = item.Definition.GridSize;
             if (rotated) size = new Vector2Int(size.y, size.x);
 
-            if (position.x < 0 || position.y < 0 || position.x + size.x > width || position.y + size.y > height) return false;
+            if (position.x < 0 || position.y < 0 || position.x + size.x > width) return false;
+            if (!autoExpandRows && position.y + size.y > height) return false;
 
             RectInt area = new RectInt(position, size);
             foreach (InventoryPlacement placement in placements)
@@ -84,6 +89,12 @@ namespace ExFillZone.Gameplay.Inventory
 
             return true;
         }
+        public bool CanPlaceReplacing(ItemInstance item, ItemInstance ignored, Vector2Int position, bool rotated = false)
+        {
+            InventoryPlacement placement = placements.Find(p => ReferenceEquals(p.Item, ignored));
+
+            return placement != null && CanPlaceInternal(item, position, rotated, placement);
+        }
 
         public bool TryPlace(ItemInstance item, Vector2Int position, bool rotated = false)
         {
@@ -91,6 +102,15 @@ namespace ExFillZone.Gameplay.Inventory
             if (!item.TryClaim(this)) return false;
 
             placements.Add(new InventoryPlacement(item, position, rotated));
+
+            if (autoExpandRows)
+            {
+                Vector2Int size = rotated
+                    ? new Vector2Int(item.Definition.GridSize.y, item.Definition.GridSize.x)
+                    : item.Definition.GridSize;
+                height = Mathf.Max(height, position.y + size.y);
+            }
+
             return true;
         }
 
@@ -112,7 +132,24 @@ namespace ExFillZone.Gameplay.Inventory
                 }
             }
 
+            if (autoExpandRows)
+            {
+                Vector2Int size = item.Definition.GridSize;
+                bool rotated = size.x > width;
+
+                if (!rotated || size.y <= width)
+                    return TryPlace(item, new Vector2Int(0, height), rotated);
+            }
+
             return false;
+        }
+
+        public bool CanMove(ItemInstance item, Vector2Int position, bool rotated)
+        {
+            InventoryPlacement current = placements.Find(p => ReferenceEquals(p.Item, item));
+
+            return current != null && item.IsOwnedBy(this) &&
+                   CanPlaceInternal(item, position, rotated, current);
         }
 
         public bool TryMove(ItemInstance item, Vector2Int position, bool rotated)
@@ -121,6 +158,10 @@ namespace ExFillZone.Gameplay.Inventory
             if (current == null || !item.IsOwnedBy(this) || !CanPlaceInternal(item, position, rotated, current)) return false;
 
             current.SetPosition(position, rotated);
+
+            if (autoExpandRows)
+                height = Mathf.Max(height, position.y + current.Size.y);
+
             return true;
         }
 

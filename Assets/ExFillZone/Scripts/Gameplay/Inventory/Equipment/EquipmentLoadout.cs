@@ -88,6 +88,96 @@ namespace ExFillZone.Gameplay.Inventory
             };
         }
 
+        public bool TryEquipNew(ItemDefinition definition, EquipmentSlotType slot)
+        {
+            if (!IsValidForSlot(definition, slot) || GetItem(slot) != null)
+                return false;
+
+            ItemInstance item = new ItemInstance(definition);
+
+            if (!item.TryClaim(this))
+                return false;
+
+            SetItem(slot, item);
+            return true;
+        }
+
+        public bool CanTransferEquippedTo(EquipmentLoadout destination, EquipmentSlotType from, EquipmentSlotType to)
+        {
+            if (destination == null || ReferenceEquals(this, destination)) return false;
+
+            ItemInstance incoming = GetItem(from);
+            ItemInstance outgoing = destination.GetItem(to);
+
+            if (incoming?.Definition == null || incoming.Quantity != 1 ||
+                !incoming.IsOwnedBy(this) || !destination.IsValidForSlot(incoming.Definition, to))
+                return false;
+
+            return outgoing == null ||
+                   (outgoing.IsOwnedBy(destination) && IsValidForSlot(outgoing.Definition, from));
+        }
+
+        public bool TryTransferEquippedTo(EquipmentLoadout destination, EquipmentSlotType from, EquipmentSlotType to)
+        {
+            if (!CanTransferEquippedTo(destination, from, to)) return false;
+
+            ItemInstance incoming = GetItem(from);
+            ItemInstance outgoing = destination.GetItem(to);
+
+            if (!incoming.TryRelease(this)) return false;
+
+            if (outgoing != null && !outgoing.TryRelease(destination))
+            {
+                incoming.TryClaim(this);
+                return false;
+            }
+
+            if (!incoming.TryClaim(destination))
+            {
+                if (outgoing != null) outgoing.TryClaim(destination);
+                incoming.TryClaim(this);
+                return false;
+            }
+
+            if (outgoing != null && !outgoing.TryClaim(this))
+            {
+                incoming.TryRelease(destination);
+                incoming.TryClaim(this);
+                outgoing.TryClaim(destination);
+                return false;
+            }
+
+            SetItem(from, outgoing);
+            destination.SetItem(to, incoming);
+
+            return true;
+        }
+
+        public bool TryTransferEquippedTo(EquipmentLoadout destination, EquipmentSlotType slot)
+        {
+            if (destination == null || ReferenceEquals(this, destination)) return false;
+
+            ItemInstance item = GetItem(slot);
+
+            if (item == null || !item.IsOwnedBy(this) || destination.GetItem(slot) != null)
+                return false;
+
+            if (!destination.IsValidForSlot(item.Definition, slot))
+                return false;
+
+            if (!item.TryRelease(this)) return false;
+
+            if (!item.TryClaim(destination))
+            {
+                item.TryClaim(this);
+                return false;
+            }
+
+            destination.SetItem(slot, item);
+            SetItem(slot, null);
+
+            return true;
+        }
         public bool TryEquip(InventoryGrid source, ItemInstance item, EquipmentSlotType slot)
         {
             if (source == null || item?.Definition == null) return false;
@@ -167,7 +257,163 @@ namespace ExFillZone.Gameplay.Inventory
                 }
             }
 
+            if (destination.AutoExpandRows)
+            {
+                Vector2Int size = item.Definition.GridSize;
+                bool rotated = size.x > destination.Width;
+
+                if (!rotated || size.y <= destination.Width)
+                    return TryUnequip(slot, destination, new Vector2Int(0, destination.Height), rotated);
+            }
+
             return false;
+        }
+        public bool CanEquipOrSwap(InventoryGrid source, ItemInstance incoming, EquipmentSlotType slot)
+        {
+            if (source == null || incoming?.Definition == null || incoming.Quantity != 1)
+                return false;
+
+            if (!source.Contains(incoming) || !incoming.IsOwnedBy(source) ||
+                !IsValidForSlot(incoming.Definition, slot))
+                return false;
+
+            ItemInstance old = GetItem(slot);
+
+            if (old == null) return true;
+
+            if (!old.IsOwnedBy(this) || ReferenceEquals(source, old.Contents))
+                return false;
+
+            return TryFindSwapSpace(source, incoming, old, out _, out _);
+        }
+
+        public bool TryEquipOrSwap(InventoryGrid source, ItemInstance incoming, EquipmentSlotType slot)
+        {
+            if (!CanEquipOrSwap(source, incoming, slot)) return false;
+
+            ItemInstance old = GetItem(slot);
+
+            if (old == null)
+                return TryEquip(source, incoming, slot);
+
+            InventoryPlacement original = null;
+
+            foreach (InventoryPlacement placement in source.Placements)
+            {
+                if (!ReferenceEquals(placement.Item, incoming)) continue;
+                original = placement;
+                break;
+            }
+
+            if (original == null ||
+                !TryFindSwapSpace(source, incoming, old, out Vector2Int position, out bool rotated))
+                return false;
+
+            Vector2Int previousPosition = original.Position;
+            bool previousRotation = original.Rotated;
+
+            if (!source.TryRemove(incoming)) return false;
+
+            if (!old.TryRelease(this))
+            {
+                source.TryPlace(incoming, previousPosition, previousRotation);
+                return false;
+            }
+
+            if (!source.TryPlace(old, position, rotated))
+            {
+                old.TryClaim(this);
+                source.TryPlace(incoming, previousPosition, previousRotation);
+                return false;
+            }
+
+            if (!incoming.TryClaim(this))
+            {
+                source.TryRemove(old);
+                old.TryClaim(this);
+                source.TryPlace(incoming, previousPosition, previousRotation);
+                return false;
+            }
+
+            SetItem(slot, incoming);
+            return true;
+        }
+
+        private bool TryFindSwapSpace(InventoryGrid source, ItemInstance incoming, ItemInstance old,
+            out Vector2Int position, out bool rotated)
+        {
+            position = Vector2Int.zero;
+            rotated = false;
+
+            if (source == null || old?.Definition == null) return false;
+
+            for (int orientation = 0; orientation < 2; orientation++)
+            {
+                bool testRotation = orientation == 1;
+
+                if (testRotation && old.Definition.GridSize.x == old.Definition.GridSize.y)
+                    break;
+
+                for (int y = 0; y < source.Height; y++)
+                {
+                    for (int x = 0; x < source.Width; x++)
+                    {
+                        Vector2Int candidate = new Vector2Int(x, y);
+
+                        if (!source.CanPlaceReplacing(old, incoming, candidate, testRotation))
+                            continue;
+
+                        position = candidate;
+                        rotated = testRotation;
+                        return true;
+                    }
+                }
+            }
+
+            if (source.AutoExpandRows)
+            {
+                Vector2Int size = old.Definition.GridSize;
+                bool appendRotated = size.x > source.Width;
+                Vector2Int appendPosition = new Vector2Int(0, source.Height);
+
+                if ((!appendRotated || size.y <= source.Width) &&
+                    source.CanPlaceReplacing(old, incoming, appendPosition, appendRotated))
+                {
+                    position = appendPosition;
+                    rotated = appendRotated;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool CanMoveBetweenSlots(EquipmentSlotType from, EquipmentSlotType to)
+        {
+            if (from == to) return false;
+
+            ItemInstance first = GetItem(from);
+            ItemInstance second = GetItem(to);
+
+            if (first?.Definition == null || !first.IsOwnedBy(this) ||
+                !IsValidForSlot(first.Definition, to))
+                return false;
+
+            return second == null ||
+                   (second.Definition != null && second.IsOwnedBy(this) &&
+                    IsValidForSlot(second.Definition, from));
+        }
+
+        public bool TryMoveBetweenSlots(EquipmentSlotType from, EquipmentSlotType to)
+        {
+            if (!CanMoveBetweenSlots(from, to)) return false;
+
+            ItemInstance first = GetItem(from);
+            ItemInstance second = GetItem(to);
+
+            SetItem(from, second);
+            SetItem(to, first);
+            return true;
         }
     }
 }

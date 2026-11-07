@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d44e1aed7c645ef42876f74128555a59, type: 3}
+  m_Name: EnemyLoot_T2_Military
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Loot.EnemyLootTable
+  helmets:
+    rollChance: 70
+    entries:
+    - item: {fileID: 11400000, guid: d96f06d15efb5cb9a7a42eb8984e4e2d, type: 2}
+      weight: 35
+    - item: {fileID: 11400000, guid: 26eb30d3c6295c05b2a044bfa4cc0d3d, type: 2}
+      weight: 65
+  bodyArmors:
+    rollChance: 65
+    entries:
+    - item: {fileID: 11400000, guid: 503e0c72e4c159019ec404730b08f7df, type: 2}
+      weight: 40
+    - item: {fileID: 11400000, guid: 1c1c35aae0f95d58915d9587a8cce406, type: 2}
+      weight: 60
+  tacticalRigs:
+    rollChance: 85
+    entries:
+    - item: {fileID: 11400000, guid: 1556da97765b53b697e2b4ee1df5af47, type: 2}
+      weight: 30
+    - item: {fileID: 11400000, guid: 24ca4d76b6845db3a0091487d94345ea, type: 2}
+      weight: 70
+  backpacks:
+    rollChance: 65
+    entries:
+    - item: {fileID: 11400000, guid: de9b5608853d58508022e69608bd3bfc, type: 2}
+      weight: 40
+    - item: {fileID: 11400000, guid: 8b8f0205ceb25011ac96cb0778a1f242, type: 2}
+      weight: 60
+  primaryWeapons:
+    rollChance: 100
+    entries:
+    - item: {fileID: 11400000, guid: d0f2f5c0c2fb5724bfac95fde55f3fc2, type: 2}
+      weight: 100
+  secondaryWeapons:
+    rollChance: 0
+    entries: []
+  minExtraItems: 4
+  maxExtraItems: 6
+  extraItems:
+    rollChance: 100
+    entries:
+    - item: {fileID: 11400000, guid: ed14552b57fb524782e640bf50a5b226, type: 2}
+      weight: 50
+    - item: {fileID: 11400000, guid: dc3b8d00de485a8bbac827abe15beae4, type: 2}
+      weight: 35
+    - item: {fileID: 11400000, guid: 507e5fc7740451269cbc3df3def91b3a, type: 2}
+      weight: 15
