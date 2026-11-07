@@ -1,5 +1,6 @@
+
 using DG.Tweening;
-using ExFillZone.Gameplay.Player;
+using ExFillZone.Gameplay.Inventory;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,46 +9,49 @@ namespace ExFillZone.Gameplay.UI
     public sealed class PlayerBackpackUI : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private PlayerAmmo playerAmmo;
+        [SerializeField] private CharacterInventory inventory;
         [SerializeField] private Image backpackFill;
+
+        [Header("Weight")]
+        [SerializeField, Min(1f)] private float maxWeight = 40f;
+        [SerializeField, Min(0.05f)] private float refreshInterval = 0.15f;
 
         [Header("Animation")]
         [SerializeField, Min(0.01f)] private float fillDuration = 0.20f;
 
-        private int lastAmmo = -1;
+        private float lastWeight = -1f;
+        private float nextRefresh;
         private Tween fillTween;
 
         private void Start()
         {
-            if (playerAmmo == null)
+            if (inventory == null || backpackFill == null)
             {
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                if (player != null) playerAmmo = player.GetComponent<PlayerAmmo>();
-            }
-
-            if (playerAmmo == null || backpackFill == null)
-            {
-                Debug.LogError("PlayerBackpackUI tiene referencias sin asignar.", this);
+                Debug.LogError("[PlayerBackpackUI] Faltan referencias.", this);
                 enabled = false;
                 return;
             }
 
-            lastAmmo = playerAmmo.CurrentAmmo;
+            lastWeight = inventory.TotalWeight;
             backpackFill.fillAmount = GetFillAmount();
         }
 
         private void Update()
         {
-            if (playerAmmo.CurrentAmmo == lastAmmo) return;
+            if (Time.unscaledTime < nextRefresh) return;
 
-            lastAmmo = playerAmmo.CurrentAmmo;
+            nextRefresh = Time.unscaledTime + refreshInterval;
+
+            float weight = inventory.TotalWeight;
+            if (Mathf.Abs(weight - lastWeight) < 0.001f) return;
+
+            lastWeight = weight;
             UpdateBackpack();
         }
 
         private float GetFillAmount()
         {
-            if (playerAmmo.MaxAmmo <= 0) return 0f;
-            return (float)playerAmmo.CurrentAmmo / playerAmmo.MaxAmmo;
+            return Mathf.Clamp01(inventory.TotalWeight / maxWeight);
         }
 
         private void UpdateBackpack()
