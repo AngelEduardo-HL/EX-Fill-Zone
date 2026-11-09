@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f36d978345ae6e9468e57fb768065c52, type: 3}
-  m_Name: medical_bandage
+  m_Name: sms_surgery_kit
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ItemDefinition
-  itemId: medical_bandage
-  displayName: Army Bandage
+  itemId: sms_surgery_kit
+  displayName: SMS Surgical Kit
   category: 1
   description: 
-  gridSize: {x: 1, y: 1}
-  weight: 0.1
-  value: 100
-  maxStack: 5
+  gridSize: {x: 3, y: 1}
+  weight: 0.8
+  value: 2200
+  maxStack: 1
   maxDurability: 0
-  icon: {fileID: 21300000, guid: 35bcd17af45e81748b9824cbaf30ed88, type: 3}
+  icon: {fileID: 21300000, guid: 85f5b6b1816c73645bc2d79d6c0f3617, type: 3}
   worldPrefab: {fileID: 0}
   equippedPrefab: {fileID: 0}

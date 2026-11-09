@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f36d978345ae6e9468e57fb768065c52, type: 3}
-  m_Name: medical_medkit
+  m_Name: cms_medical_surgery_kit
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Inventory.ItemDefinition
-  itemId: medical_medkit
-  displayName: AFAK Medkit
+  itemId: cms_medical_surgery_kit
+  displayName: CMS Surgical Kit
   category: 1
   description: 
-  gridSize: {x: 2, y: 2}
-  weight: 0.5
-  value: 500
+  gridSize: {x: 2, y: 1}
+  weight: 0.8
+  value: 1200
   maxStack: 1
   maxDurability: 0
-  icon: {fileID: 21300000, guid: 67806c881cf94604fb65a9fd6f38bfff, type: 3}
+  icon: {fileID: 21300000, guid: 50d100fc3eb875242bd66ec052b61339, type: 3}
   worldPrefab: {fileID: 0}
   equippedPrefab: {fileID: 0}
