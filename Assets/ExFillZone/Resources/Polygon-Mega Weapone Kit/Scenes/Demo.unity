@@ -25238,6 +25238,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1609598163}
     m_Modifications:
+    - target: {fileID: 4948332231039537426, guid: f5fd9a0deef4f434c95c644bdfb2d1c9, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 40252f20650c562439a4a295a2fac69d, type: 2}
     - target: {fileID: 6117908298452019837, guid: f5fd9a0deef4f434c95c644bdfb2d1c9, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -28014,6 +28018,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Magazine_For_Assault_Rifle_5,56 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1355011064410126396, guid: 2306bfc90383443459d11f06834ff3fc, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 40252f20650c562439a4a295a2fac69d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
