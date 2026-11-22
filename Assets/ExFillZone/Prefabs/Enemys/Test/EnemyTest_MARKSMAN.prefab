@@ -1613,7 +1613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3678a3ddb3464824d898b22dab1d56b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Combat.ProjectileWeapon
---- !u!114 &7000000000000000000
+--- !u!114 &7000000000000000502
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1625,8 +1625,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b76d2a43a89e4d65b7c1872ed5964f23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.AI.Enemy.Combat.EnemyCombatTactics
-  loadoutGenerator: {fileID: 8489055727148029211}
-  shooter: {fileID: 8489055727148029211}
+  loadoutGenerator: {fileID: 1139272526004552011}
+  shooter: {fileID: 130090420713302198}
   militant:
     preferredDistance: 7
     retreatDistance: 3
