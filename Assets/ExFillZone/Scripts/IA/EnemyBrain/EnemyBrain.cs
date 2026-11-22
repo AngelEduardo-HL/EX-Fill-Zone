@@ -41,16 +41,34 @@ namespace ExFillZone.AI.Enemy
         private EnemyState currentState;
 
         [Header("Target Memory")]
-        [SerializeField, Min(0.5f)] private float lastKnownSearchDuration = 4f;
         [SerializeField, Min(1f)] private float maxTravelTime = 10f;
 
+        [Header("Area Search")]
+        [SerializeField, Min(1)] private int maxSearchPoints = 5;
+        [SerializeField, Min(0.1f)] private float minInspectTime = 2f;
+        [SerializeField, Min(0.1f)] private float maxInspectTime = 4f;
+        [SerializeField, Min(0f)] private float lookAroundSpeed = 65f;
+
+        [Header("After Search")]
+        [SerializeField, Range(0f, 1f)] private float returnHomeChance = 0.5f;
+        [SerializeField, Min(1f)] private float returnHomeTimeout = 25f;
+
+        private PlayerSearchArea searchArea;
+        private Vector3 spawnPosition;
         private Vector3 lastKnownPosition;
         private bool hasLastKnownPosition;
         private bool searchingLastKnown;
-        private bool reachedLastKnown;
-
+        private bool wasSeeingPlayer;
+        private bool returningHome;
+        private bool returnStarted;
+        private int searchStage;
+        private int completedSearchPoints;
         private float travelDeadline;
-        private float searchDeadline;
+        private float inspectUntil;
+        private float searchPointAssignedAt;
+        private float returnDeadline;
+        private float returnStartedAt;
+        private float lookDirection = 1f;
 
         public EnemyState CurrentState
         {
@@ -72,6 +90,7 @@ namespace ExFillZone.AI.Enemy
 
         private void Awake()
         {
+            spawnPosition = transform.position;
             navigator = GetComponent<EnemyNavigator>();
             shooter = GetComponent<EnemyShooter>();
 
@@ -86,11 +105,36 @@ namespace ExFillZone.AI.Enemy
 
         private void Update()
         {
-            if (fov == null || !fov.CanSeePlayer || fov.Player == null) return;
+            if (fov == null || fov.Player == null) return;
 
-            lastKnownPosition = fov.Player.position;
-            hasLastKnownPosition = true;
+            if (fov.CanSeePlayer)
+            {
+                lastKnownPosition = fov.Player.position;
+                hasLastKnownPosition = true;
+
+                if (searchingLastKnown || returningHome || searchArea != null)
+                {
+                    director?.LeavePlayerSearch(this, searchArea);
+                    searchArea = null;
+                    searchingLastKnown = false;
+                    returningHome = false;
+                    returnStarted = false;
+                    searchStage = 0;
+                    navigator.Stop();
+                }
+
+                wasSeeingPlayer = true;
+                return;
+            }
+
+            if (!wasSeeingPlayer) return;
+
+            wasSeeingPlayer = false;
+            director?.LeavePlayerSearch(this, searchArea);
+            searchArea = director?.JoinPlayerSearch(this, lastKnownPosition);
             searchingLastKnown = false;
+            completedSearchPoints = 0;
+            searchStage = 0;
         }
 
         private void OnEnable()
@@ -103,10 +147,10 @@ namespace ExFillZone.AI.Enemy
 
         private void OnDisable()
         {
-            if (director != null)
-            {
-                director.UnregisterEnemy(this);
-            }
+            director?.LeavePlayerSearch(this, searchArea);
+            searchArea = null;
+
+            if (director != null) director.UnregisterEnemy(this);
         }
 
         // =====================================
@@ -115,6 +159,13 @@ namespace ExFillZone.AI.Enemy
 
         public void ReceiveGunshotClue(GunshotClue newClue)
         {
+            if (returningHome)
+            {
+                returningHome = false;
+                returnStarted = false;
+                navigator.Stop();
+            }
+
             clue = newClue;
             hasClue = true;
             
@@ -208,52 +259,157 @@ namespace ExFillZone.AI.Enemy
         {
             if (fov.CanSeePlayer || !hasLastKnownPosition)
             {
-                searchingLastKnown = false;
                 ThisTask.Fail();
                 return;
             }
 
             if (!searchingLastKnown)
             {
-                searchingLastKnown = true;
-                reachedLastKnown = false;
-                travelDeadline = Time.time + maxTravelTime;
+                if (searchArea == null)
+                    searchArea = director?.JoinPlayerSearch(this, lastKnownPosition);
 
-                if (!navigator.SetDestination(lastKnownPosition))
+                if (searchArea == null)
                 {
                     hasLastKnownPosition = false;
-                    searchingLastKnown = false;
+                    ThisTask.Fail();
+                    return;
+                }
+
+                searchingLastKnown = true;
+                completedSearchPoints = 0;
+                searchStage = 0;
+            }
+
+            if (completedSearchPoints >= maxSearchPoints)
+            {
+                FinishVisualSearch();
+                ThisTask.Succeed();
+                return;
+            }
+
+            if (searchStage == 0)
+            {
+                if (director == null || !director.TryGetPlayerSearchPoint(this, searchArea, out Vector3 point) ||
+                    !navigator.SetDestination(point))
+                {
+                    completedSearchPoints++;
+                    ThisTask.debugInfo = "Sin destino navegable";
+                    if (completedSearchPoints >= maxSearchPoints)
+                    {
+                        FinishVisualSearch();
+                        ThisTask.Succeed();
+                    }
+                    return;
+                }
+
+                searchPointAssignedAt = Time.time;
+                travelDeadline = Time.time + maxTravelTime;
+                searchStage = 1;
+            }
+
+            if (searchStage == 1)
+            {
+                CurrentState = EnemyState.MovingToInvestigation;
+                ThisTask.debugInfo = $"Buscando punto {completedSearchPoints + 1}/{maxSearchPoints}";
+
+                if (Time.time > searchPointAssignedAt + 0.15f && navigator.HasReachedDestination)
+                {
+                    navigator.Stop();
+                    inspectUntil = Time.time + UnityEngine.Random.Range(minInspectTime, Mathf.Max(minInspectTime, maxInspectTime));
+                    lookDirection = UnityEngine.Random.value < 0.5f ? -1f : 1f;
+                    searchStage = 2;
+                }
+                else if (Time.time >= travelDeadline)
+                {
+                    navigator.Stop();
+                    completedSearchPoints++;
+                    searchStage = 0;
+                    if (completedSearchPoints >= maxSearchPoints)
+                    {
+                        FinishVisualSearch();
+                        ThisTask.Succeed();
+                    }
+                    return;
+                }
+                else return;
+            }
+
+            if (searchStage == 2)
+            {
+                CurrentState = EnemyState.Investigating;
+                ThisTask.debugInfo = $"Inspeccionando {completedSearchPoints + 1}/{maxSearchPoints}";
+                transform.Rotate(0f, lookDirection * lookAroundSpeed * Time.deltaTime, 0f);
+
+                if (Time.time < inspectUntil) return;
+
+                completedSearchPoints++;
+                searchStage = 0;
+
+                if (completedSearchPoints >= maxSearchPoints)
+                {
+                    FinishVisualSearch();
+                    ThisTask.Succeed();
+                }
+            }
+        }
+
+        private void FinishVisualSearch()
+        {
+            navigator.Stop();
+            director?.LeavePlayerSearch(this, searchArea);
+            searchArea = null;
+            hasLastKnownPosition = false;
+            searchingLastKnown = false;
+            searchStage = 0;
+            hasClue = false;
+            isCheckingArea = false;
+            returningHome = UnityEngine.Random.value < returnHomeChance;
+            returnStarted = false;
+            CurrentState = EnemyState.Idle;
+        }
+
+        [Task]
+        private bool HasReturnOrder()
+        {
+            return returningHome && !fov.CanSeePlayer;
+        }
+
+        [Task]
+        private void ReturnHome()
+        {
+            if (!returningHome || fov.CanSeePlayer)
+            {
+                ThisTask.Fail();
+                return;
+            }
+
+            if (!returnStarted)
+            {
+                returnStarted = true;
+                returnStartedAt = Time.time;
+                returnDeadline = Time.time + returnHomeTimeout;
+
+                if (!navigator.SetDestination(spawnPosition))
+                {
+                    returningHome = false;
+                    returnStarted = false;
+                    CurrentState = EnemyState.Idle;
                     ThisTask.Fail();
                     return;
                 }
             }
 
-            if (!reachedLastKnown)
+            CurrentState = EnemyState.ReturningHome;
+            ThisTask.debugInfo = "Regresando al punto inicial";
+
+            if ((Time.time > returnStartedAt + 0.15f && navigator.HasReachedDestination) || Time.time >= returnDeadline)
             {
-                CurrentState = EnemyState.MovingToInvestigation;
-
-                if (!navigator.HasReachedDestination && Time.time < travelDeadline)
-                {
-                    ThisTask.debugInfo = "Buscando última posición conocida";
-                    return;
-                }
-
                 navigator.Stop();
-                reachedLastKnown = true;
-                searchDeadline = Time.time + lastKnownSearchDuration;
+                returningHome = false;
+                returnStarted = false;
+                CurrentState = EnemyState.Idle;
+                ThisTask.Succeed();
             }
-
-            CurrentState = EnemyState.Investigating;
-            ThisTask.debugInfo = "Buscando jugador en la zona";
-
-            if (Time.time < searchDeadline) return;
-
-            hasLastKnownPosition = false;
-            searchingLastKnown = false;
-            reachedLastKnown = false;
-
-            CurrentState = EnemyState.Idle;
-            ThisTask.Succeed();
         }
 
         // =====================================
