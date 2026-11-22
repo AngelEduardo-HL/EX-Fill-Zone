@@ -1620,7 +1620,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 38666956064183247}
+  m_GameObject: {fileID: 6011252803969196441}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b76d2a43a89e4d65b7c1872ed5964f23, type: 3}
@@ -1629,27 +1629,34 @@ MonoBehaviour:
   loadoutGenerator: {fileID: 1139272526004552011}
   shooter: {fileID: 130090420713302198}
   militant:
-    preferredDistance: 7
-    retreatDistance: 3
-    decisionInterval: 0.4
+    preferredDistance: 6
+    retreatDistance: 2.2
+    decisionInterval: 0.45
     strafeDistance: 0
     strafeInterval: 2
+    speedMultiplier: 1
   marksman:
     preferredDistance: 8.5
-    retreatDistance: 5
+    retreatDistance: 7.5
     decisionInterval: 0.4
     strafeDistance: 0
     strafeInterval: 2
+    speedMultiplier: 0.9
   assault:
-    preferredDistance: 3.5
+    preferredDistance: 2.4
     retreatDistance: 0
-    decisionInterval: 0.25
-    strafeDistance: 0
-    strafeInterval: 2
+    decisionInterval: 0.2
+    strafeDistance: 2.3
+    strafeInterval: 1.2
+    speedMultiplier: 1.4
   hunter:
-    preferredDistance: 7
-    retreatDistance: 3.5
-    decisionInterval: 0.35
-    strafeDistance: 4
-    strafeInterval: 2
+    preferredDistance: 6.5
+    retreatDistance: 4
+    decisionInterval: 0.25
+    strafeDistance: 4.5
+    strafeInterval: 1.8
+    speedMultiplier: 1.2
   navMeshSampleDistance: 2
+  distanceTolerance: 0.75
+  logTacticalChanges: 1
+  currentTactic: Inactive
