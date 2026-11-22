@@ -3,6 +3,11 @@ tree("Root")
     fallback
         sequence
             CanSeePlayer
+            HasCombatTactics
+            FightTactically
+
+        sequence
+            CanSeePlayer
             InStopRange
             ShootPlayer
 
