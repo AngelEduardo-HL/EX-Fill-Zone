@@ -30,6 +30,7 @@ namespace ExFillZone.AI.Enemy
         private EnemyFOV fov;
 
         private EnemyShooter shooter;
+        private EnemyCombatTactics combatTactics;
 
         private GunshotClue clue;
 
@@ -93,6 +94,7 @@ namespace ExFillZone.AI.Enemy
             spawnPosition = transform.position;
             navigator = GetComponent<EnemyNavigator>();
             shooter = GetComponent<EnemyShooter>();
+            combatTactics = GetComponent<EnemyCombatTactics>();
 
             fov = GetComponent<EnemyFOV>();
 
@@ -199,6 +201,30 @@ namespace ExFillZone.AI.Enemy
         private bool HasClue()
         {
             return hasClue;
+        }
+
+        // =====================================
+        // PANDA - COMBATE TACTICO (SOLO PREFABS CON COMPONENTE)
+        // =====================================
+
+        [Task]
+        private bool HasCombatTactics()
+        {
+            return combatTactics != null && combatTactics.isActiveAndEnabled;
+        }
+
+        [Task]
+        private void FightTactically()
+        {
+            if (!fov.CanSeePlayer || fov.Player == null || combatTactics == null ||
+                !combatTactics.Execute(fov.Player, out bool shooting))
+            {
+                ThisTask.Fail();
+                return;
+            }
+
+            CurrentState = shooting ? EnemyState.Attacking : EnemyState.Chasing;
+            ThisTask.debugInfo = shooting ? "Combate táctico" : "Posicionamiento táctico";
         }
 
         // =====================================
