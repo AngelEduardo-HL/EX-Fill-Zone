@@ -17841,6 +17841,9 @@ MonoBehaviour:
   navMeshSampleDistance: 1.5
   attemptsPerEnemy: 12
   minimumPointSeparation: 1.25
+  playerSearchRadius: 8
+  searchGroupDistance: 12
+  searchPointAttempts: 12
   debugDuration: 4
 --- !u!4 &1172543014 stripped
 Transform:
