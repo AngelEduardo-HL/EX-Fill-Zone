@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4722818674454514192}
+  - component: {fileID: 7000000000000000000}
   m_Layer: 0
   m_Name: Fill Area
   m_TagString: Untagged
@@ -1612,3 +1613,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3678a3ddb3464824d898b22dab1d56b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.Gameplay.Combat.ProjectileWeapon
+--- !u!114 &7000000000000000000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38666956064183247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b76d2a43a89e4d65b7c1872ed5964f23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExFillZone.AI.Enemy.Combat.EnemyCombatTactics
+  loadoutGenerator: {fileID: 8489055727148029211}
+  shooter: {fileID: 8489055727148029211}
+  militant:
+    preferredDistance: 7
+    retreatDistance: 3
+    decisionInterval: 0.4
+    strafeDistance: 0
+    strafeInterval: 2
+  marksman:
+    preferredDistance: 8.5
+    retreatDistance: 5
+    decisionInterval: 0.4
+    strafeDistance: 0
+    strafeInterval: 2
+  assault:
+    preferredDistance: 3.5
+    retreatDistance: 0
+    decisionInterval: 0.25
+    strafeDistance: 0
+    strafeInterval: 2
+  hunter:
+    preferredDistance: 7
+    retreatDistance: 3.5
+    decisionInterval: 0.35
+    strafeDistance: 4
+    strafeInterval: 2
+  navMeshSampleDistance: 2
