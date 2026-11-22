@@ -18,4 +18,8 @@ tree("Root")
             HasClue
             Investigate
 
+        sequence
+            HasReturnOrder
+            ReturnHome
+
         Idle

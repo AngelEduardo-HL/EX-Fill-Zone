@@ -21,6 +21,14 @@ namespace ExFillZone.AI.Director
         [SerializeField, Min(0f)]
         private float minimumPointSeparation = 1.25f;
 
+        [Header("Shared Player Search")]
+        [SerializeField, Min(1f)] private float playerSearchRadius = 8f;
+        [SerializeField, Min(1f)] private float searchGroupDistance = 12f;
+        [SerializeField, Min(1)] private int searchPointAttempts = 12;
+
+        private readonly List<PlayerSearchArea> playerSearchAreas = new List<PlayerSearchArea>();
+        private NavMeshPath searchPath;
+
         [Header("Debug")]
         [SerializeField, Min(0f)]
         private float debugDuration = 4f;
@@ -106,8 +114,8 @@ namespace ExFillZone.AI.Director
                 ))
                 {
                     Debug.LogWarning(
-                        $"No se encontró un punto de " +
-                        $"investigación válido para {enemy.name}.",
+                        $"No se encontrÃ³ un punto de " +
+                        $"investigaciÃ³n vÃ¡lido para {enemy.name}.",
                         enemy
                     );
 
@@ -315,6 +323,86 @@ namespace ExFillZone.AI.Director
             debugInvestigationPoints.AddRange(
                 assignedPoints
             );
+        }
+
+        // =====================================
+        // SHARED PLAYER SEARCH
+        // =====================================
+
+        public PlayerSearchArea JoinPlayerSearch(EnemyBrain enemy, Vector3 lastKnownPosition)
+        {
+            if (enemy == null) return null;
+            if (!NavMesh.SamplePosition(lastKnownPosition, out NavMeshHit hit, navMeshSampleDistance * 2f, NavMesh.AllAreas))
+                return null;
+
+            float maxGroupDistanceSqr = searchGroupDistance * searchGroupDistance;
+
+            foreach (PlayerSearchArea area in playerSearchAreas)
+            {
+                if ((area.Center - hit.position).sqrMagnitude > maxGroupDistanceSqr) continue;
+                area.Join(enemy);
+                return area;
+            }
+
+            PlayerSearchArea newArea = new PlayerSearchArea(hit.position, playerSearchRadius, Time.time);
+            newArea.Join(enemy);
+            playerSearchAreas.Add(newArea);
+            return newArea;
+        }
+
+        public void LeavePlayerSearch(EnemyBrain enemy, PlayerSearchArea area)
+        {
+            if (enemy == null || area == null) return;
+
+            area.Leave(enemy);
+            if (area.MemberCount == 0) playerSearchAreas.Remove(area);
+        }
+
+        public bool TryGetPlayerSearchPoint(EnemyBrain enemy, PlayerSearchArea area, out Vector3 point)
+        {
+            point = default;
+            if (enemy == null || area == null || !area.Contains(enemy)) return false;
+
+            if (searchPath == null) searchPath = new NavMeshPath();
+
+            int memberCount = Mathf.Max(1, area.MemberCount);
+            int memberIndex = Mathf.Max(0, area.IndexOf(enemy));
+            float sectorAngle = 360f / memberCount;
+            float radiusSqr = area.Radius * area.Radius;
+
+            for (int attempt = 0; attempt < searchPointAttempts; attempt++)
+            {
+                float angle = (memberIndex + UnityEngine.Random.value) * sectorAngle * Mathf.Deg2Rad;
+                float distance = Mathf.Sqrt(UnityEngine.Random.value) * area.Radius;
+                Vector3 candidate = area.Center + new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * distance;
+
+                if (!NavMesh.SamplePosition(candidate, out NavMeshHit hit, navMeshSampleDistance, NavMesh.AllAreas))
+                    continue;
+
+                Vector3 offset = hit.position - area.Center;
+                offset.y = 0f;
+                if (offset.sqrMagnitude > radiusSqr) continue;
+
+                if (!NavMesh.CalculatePath(enemy.Position, hit.position, NavMesh.AllAreas, searchPath)) continue;
+                if (searchPath.status != NavMeshPathStatus.PathComplete) continue;
+
+                point = hit.position;
+                return true;
+            }
+
+            return false;
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            if (!Application.isPlaying) return;
+
+            foreach (PlayerSearchArea area in playerSearchAreas)
+            {
+                Gizmos.color = new Color(1f, 0.7f, 0.1f, 0.85f);
+                Gizmos.DrawWireSphere(area.Center, area.Radius);
+                Gizmos.DrawSphere(area.Center, 0.2f);
+            }
         }
 
         private void OnDrawGizmos()
