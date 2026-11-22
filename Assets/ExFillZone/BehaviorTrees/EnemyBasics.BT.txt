@@ -1,3 +1,4 @@
+
 tree("Root")
     fallback
         sequence
@@ -8,6 +9,10 @@ tree("Root")
         sequence
             CanSeePlayer
             ChasePlayer
+
+        sequence
+            HasLastKnownPosition
+            SearchLastKnownPosition
 
         sequence
             HasClue

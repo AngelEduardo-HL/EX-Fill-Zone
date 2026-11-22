@@ -1,6 +1,8 @@
 
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ExFillZone.Gameplay.Inventory
 {
@@ -10,6 +12,14 @@ namespace ExFillZone.Gameplay.Inventory
         [Header("Weapon Panels")]
         [SerializeField] private RectTransform primaryWeaponPanel;
         [SerializeField] private RectTransform secondaryWeaponPanel;
+
+        [Header("Primary Weapon UI")]
+        [SerializeField] private Image primaryWeaponIcon;
+        [SerializeField] private TMP_Text primaryWeaponName;
+
+        [Header("Secondary Weapon UI")]
+        [SerializeField] private Image secondaryWeaponIcon;
+        [SerializeField] private TMP_Text secondaryWeaponName;
 
         [Header("Position")]
         [SerializeField] private Vector2 backOffset = new Vector2(35f, 35f);
@@ -21,8 +31,6 @@ namespace ExFillZone.Gameplay.Inventory
         [SerializeField] private Ease ease = Ease.OutCubic;
 
         private CharacterInventory inventory;
-        private EquipmentSlotUI primarySlotUI;
-        private EquipmentSlotUI secondarySlotUI;
         private CanvasGroup primaryGroup;
         private CanvasGroup secondaryGroup;
 
@@ -37,7 +45,7 @@ namespace ExFillZone.Gameplay.Inventory
         {
             if (primaryWeaponPanel == null || secondaryWeaponPanel == null)
             {
-                Debug.LogError("[WeaponSelectionUI] Faltan referencias.", this);
+                Debug.LogError("[WeaponSelectionUI] Faltan referencias de paneles.", this);
                 enabled = false;
                 return;
             }
@@ -48,9 +56,6 @@ namespace ExFillZone.Gameplay.Inventory
 
             primaryGroup = GetOrAddCanvasGroup(primaryWeaponPanel);
             secondaryGroup = GetOrAddCanvasGroup(secondaryWeaponPanel);
-
-            primarySlotUI = primaryWeaponPanel.GetComponent<EquipmentSlotUI>();
-            secondarySlotUI = secondaryWeaponPanel.GetComponent<EquipmentSlotUI>();
 
             SetImmediate(1);
         }
@@ -65,10 +70,23 @@ namespace ExFillZone.Gameplay.Inventory
         {
             if (inventory == null) return;
 
-            EquipmentLoadout equipment = inventory.Equipment;
+            SetWeaponVisual(inventory.Equipment.GetItem(EquipmentSlotType.PrimaryWeapon), primaryWeaponIcon, primaryWeaponName);
+            SetWeaponVisual(inventory.Equipment.GetItem(EquipmentSlotType.SecondaryWeapon), secondaryWeaponIcon, secondaryWeaponName);
+        }
 
-            primarySlotUI?.ShowItem(equipment.GetItem(EquipmentSlotType.PrimaryWeapon));
-            secondarySlotUI?.ShowItem(equipment.GetItem(EquipmentSlotType.SecondaryWeapon));
+        private void SetWeaponVisual(ItemInstance item, Image icon, TMP_Text weaponName)
+        {
+            ItemDefinition definition = item?.Definition;
+
+            if (icon != null)
+            {
+                icon.sprite = definition != null ? definition.Icon : null;
+                icon.enabled = icon.sprite != null;
+                icon.preserveAspect = true;
+            }
+
+            if (weaponName != null)
+                weaponName.text = definition != null ? definition.DisplayName : "NO WEAPON";
         }
 
         private void Update()
@@ -85,10 +103,10 @@ namespace ExFillZone.Gameplay.Inventory
             if (slot != 1 && slot != 2 || selectedSlot == slot) return;
 
             selectedSlot = slot;
-
             KillTweens();
 
             bool primaryActive = slot == 1;
+
             (primaryActive ? primaryWeaponPanel : secondaryWeaponPanel).SetAsLastSibling();
 
             AnimatePanel(primaryWeaponPanel, primaryGroup, primaryOriginalScale, primaryActive);

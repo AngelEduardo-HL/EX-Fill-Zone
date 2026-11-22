@@ -40,6 +40,18 @@ namespace ExFillZone.AI.Enemy
 
         private EnemyState currentState;
 
+        [Header("Target Memory")]
+        [SerializeField, Min(0.5f)] private float lastKnownSearchDuration = 4f;
+        [SerializeField, Min(1f)] private float maxTravelTime = 10f;
+
+        private Vector3 lastKnownPosition;
+        private bool hasLastKnownPosition;
+        private bool searchingLastKnown;
+        private bool reachedLastKnown;
+
+        private float travelDeadline;
+        private float searchDeadline;
+
         public EnemyState CurrentState
         {
             get => currentState;
@@ -70,6 +82,15 @@ namespace ExFillZone.AI.Enemy
                 director = FindFirstObjectByType<AIDirector>();
             }
             CurrentState = EnemyState.Idle;
+        }
+
+        private void Update()
+        {
+            if (fov == null || !fov.CanSeePlayer || fov.Player == null) return;
+
+            lastKnownPosition = fov.Player.position;
+            hasLastKnownPosition = true;
+            searchingLastKnown = false;
         }
 
         private void OnEnable()
@@ -109,6 +130,12 @@ namespace ExFillZone.AI.Enemy
         private bool CanSeePlayer()
         {
             return fov.CanSeePlayer;
+        }
+
+        [Task]
+        private bool HasLastKnownPosition()
+        {
+            return hasLastKnownPosition && !fov.CanSeePlayer;
         }
 
         [Task]
@@ -174,6 +201,59 @@ namespace ExFillZone.AI.Enemy
             }
 
             ThisTask.debugInfo = "Persiguiendo jugador";
+        }
+
+        [Task]
+        private void SearchLastKnownPosition()
+        {
+            if (fov.CanSeePlayer || !hasLastKnownPosition)
+            {
+                searchingLastKnown = false;
+                ThisTask.Fail();
+                return;
+            }
+
+            if (!searchingLastKnown)
+            {
+                searchingLastKnown = true;
+                reachedLastKnown = false;
+                travelDeadline = Time.time + maxTravelTime;
+
+                if (!navigator.SetDestination(lastKnownPosition))
+                {
+                    hasLastKnownPosition = false;
+                    searchingLastKnown = false;
+                    ThisTask.Fail();
+                    return;
+                }
+            }
+
+            if (!reachedLastKnown)
+            {
+                CurrentState = EnemyState.MovingToInvestigation;
+
+                if (!navigator.HasReachedDestination && Time.time < travelDeadline)
+                {
+                    ThisTask.debugInfo = "Buscando última posición conocida";
+                    return;
+                }
+
+                navigator.Stop();
+                reachedLastKnown = true;
+                searchDeadline = Time.time + lastKnownSearchDuration;
+            }
+
+            CurrentState = EnemyState.Investigating;
+            ThisTask.debugInfo = "Buscando jugador en la zona";
+
+            if (Time.time < searchDeadline) return;
+
+            hasLastKnownPosition = false;
+            searchingLastKnown = false;
+            reachedLastKnown = false;
+
+            CurrentState = EnemyState.Idle;
+            ThisTask.Succeed();
         }
 
         // =====================================
