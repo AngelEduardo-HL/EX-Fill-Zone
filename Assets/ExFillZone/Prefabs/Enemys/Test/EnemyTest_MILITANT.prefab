@@ -830,6 +830,7 @@ GameObject:
   - component: {fileID: 2428524595656038523}
   - component: {fileID: 3347950303678928556}
   - component: {fileID: 1139272526004552011}
+  - component: {fileID: 7000000000000000501}
   m_Layer: 0
   m_Name: EnemyTest_MILITANT
   m_TagString: Untagged
